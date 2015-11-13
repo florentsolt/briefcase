@@ -49,9 +49,7 @@ module.exports = React.createClass({
     render: function() {
         if (!window.Me) {
             return (
-                <div className="container">
-                    <Login/>
-                </div>
+                <Login/>
             );
         } else {
             return (
