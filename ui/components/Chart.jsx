@@ -1,11 +1,11 @@
 const d3 = require("d3");
 const React = require("react");
 const ReactDOM = require("react-dom");
-const PureRenderMixin = require("react-addons-pure-render-mixin");
+const Pure = require("react-addons-pure-render-mixin");
 
 module.exports = React.createClass({
     displayName: "Chart",
-    mixins: [ PureRenderMixin ],
+    mixins: [ Pure ],
 
     getInitialState: function() {
         return {

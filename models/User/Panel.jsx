@@ -1,7 +1,7 @@
 "use strict";
 
 const React = require("react");
-const Pure = require("react/lib/ReactComponentWithPureRenderMixin");
+const Pure = require("react-addons-pure-render-mixin");
 const Panel = require("../../ui/mixins/Panel");
 const ModelProperty = require("../../ui/components/ModelProperty");
 

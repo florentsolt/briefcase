@@ -1,5 +1,5 @@
 const React = require("react");
-const PureRenderMixin = require("react-addons-pure-render-mixin");
+const Pure = require("react-addons-pure-render-mixin");
 
 const Paper = require("material-ui/lib/paper");
 const TextField = require("material-ui/lib/text-field");
@@ -8,7 +8,7 @@ const FontIcon = require("material-ui/lib/font-icon");
 
 var Login = React.createClass({
     displayName: "Login",
-    mixins: [PureRenderMixin],
+    mixins: [ Pure ],
 
     onEnterKeyDown: function() {
         this.refs.form.submit();
