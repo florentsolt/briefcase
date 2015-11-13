@@ -9,10 +9,6 @@ module.exports = class Comment extends Model {
         return this.at("/text");
     }
 
-    get icon() {
-        return "comment";
-    }
-
     static get mapping() {
         return {
             text: {"type":"string"}

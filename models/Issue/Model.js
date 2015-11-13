@@ -9,10 +9,6 @@ module.exports = class Issue extends Model {
         return this.at("/subject");
     }
 
-    get icon() {
-        return "assignment";
-    }
-
     static get mapping() {
         return {
             status: {"type": "string", "index": "not_analyzed"},

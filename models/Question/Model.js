@@ -9,10 +9,6 @@ module.exports = class Question extends Model {
         return this.at("/text");
     }
 
-    get icon() {
-        return "help";
-    }
-
     static get mapping() {
         return {
             text: {"type":"string"}

@@ -5,11 +5,27 @@ exports.model = function(name) {
 };
 
 exports.panel = function(name) {
-    return require("../models/" + name + "/Panel");
+    try {
+        return require("../models/" + name + "/Panel");
+    } catch(e) {
+        return false;
+    }
 };
 
 exports.inline = function(name) {
-    return require("../models/" + name + "/Inline");
+    try {
+        return require("../models/" + name + "/Inline");
+    } catch(e) {
+        return false;
+    }
+};
+
+exports.icon = function(name) {
+    try {
+        return require("../models/" + name + "/Icon");
+    } catch(e) {
+        return false;
+    }
 };
 
 exports.names = function() {

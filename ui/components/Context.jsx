@@ -4,6 +4,7 @@ const FontIcon = require("material-ui/lib/font-icon");
 const StylePropable = require("material-ui/lib/mixins/style-propable");
 const Loader = require("../mixins/Loader");
 const TimeAgo = require("./TimeAgo");
+const Directory = require("../../inc/Directory");
 
 module.exports = React.createClass({
     displayName: "Context",
@@ -29,9 +30,11 @@ module.exports = React.createClass({
     },
 
     renderModel: function(model) {
+        var Icon = Directory.icon(model.constructor.name);
+
         return (
             <span style={this.state.style} key={model.ref}>
-                <FontIcon className="material-icons" style={this.mergeStyles(this.state.style, {marginRight: "0px"})}>{model.icon}</FontIcon> {model.title}
+                <Icon model={model} style={this.mergeStyles(this.state.style, {marginRight: "0px"})}/> {model.title}
             </span>
         );
     },

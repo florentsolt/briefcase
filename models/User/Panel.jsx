@@ -1,12 +1,13 @@
 "use strict";
 
 const React = require("react");
+const Pure = require("react/lib/ReactComponentWithPureRenderMixin");
 const Panel = require("../../ui/mixins/Panel");
 const ModelProperty = require("../../ui/components/ModelProperty");
 
 module.exports = React.createClass({
     displayName: "UserPanel",
-    mixins: [ Panel ],
+    mixins: [ Panel, Pure ],
 
     modelRender: function() {
         return (

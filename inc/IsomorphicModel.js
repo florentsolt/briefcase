@@ -31,10 +31,6 @@ class IsomorphicModel {
         throw new Error("Default title property has not been specified");
     }
 
-    get icon() {
-        throw new Error("Default icon property has not been specified");
-    }
-
     get ref() {
         return `${this.constructor.name}#${this.id}`;
     }

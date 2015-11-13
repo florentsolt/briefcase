@@ -9,10 +9,6 @@ module.exports = class Url extends Model {
         return this.at("/title");
     }
 
-    get icon() {
-        return "trending_up";
-    }
-
     static get mapping() {
         return {
             title: {"type":"string"},

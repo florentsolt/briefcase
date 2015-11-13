@@ -17,6 +17,7 @@ const Chart = require("./Chart");
 const Waypoint = require("react-waypoint");
 
 const Storage = require("../Storage");
+const Directory = require("../../inc/Directory");
 
 const Spinner = require ("./Spinner");
 const Context = require("./Context");
@@ -173,12 +174,17 @@ module.exports = React.createClass({
             let rows = [];
 
             this.state.models.forEach((item) => {
+                var Icon = Directory.icon(item.constructor.name);
+                var Inline = Directory.inline(item.constructor.name);
+                var Panel = Directory.panel(item.constructor.name);
+
                 rows.push(
                     <ListItem key={item.ref}
+                        disabled={Panel ? false : true}
                         onTouchTap={this.onRowClick.bind(this, item)}
                         rightIconButton={<Menu/>}
-                        leftIcon={<FontIcon className="material-icons">{item.icon}</FontIcon>}
-                        primaryText={item.title}
+                        leftIcon={Icon && <Icon model={item}/>}
+                        primaryText={<Inline model={item}/>}
                         secondaryText={<Context followers={this.props.followers} derivators={this.props.derivators} parents={this.props.parents} date={this.props.date} model={item}/>}æ/>
                 );
                 rows.push(this.expand(item));

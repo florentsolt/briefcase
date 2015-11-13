@@ -9,10 +9,6 @@ module.exports = class Wiki extends Model {
         return this.at("/title");
     }
 
-    get icon() {
-        return "description";
-    }
-
     static get mapping() {
         return {
             title: {"type":"string"},

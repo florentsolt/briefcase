@@ -9,10 +9,6 @@ module.exports = class Project extends Model {
         return this.at("/name");
     }
 
-    get icon() {
-        return "book";
-    }
-
     static get idType() {
         return "string";
     }

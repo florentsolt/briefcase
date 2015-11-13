@@ -1,6 +1,7 @@
 "use strict";
 
 const React = require("react");
+const Pure = require("react/lib/ReactComponentWithPureRenderMixin");
 const textile = require("textile-js");
 
 const Panel = require("../../ui/mixins/Panel");
@@ -8,7 +9,7 @@ const TimeAgo = require("../../ui/components/TimeAgo");
 
 module.exports = React.createClass({
     displayName: "IssuePanel",
-    mixins: [ Panel ],
+    mixins: [ Panel, Pure ],
 
     modelRender: function() {
         return (

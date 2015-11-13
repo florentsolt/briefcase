@@ -9,10 +9,6 @@ module.exports = class User extends Model {
         return this.at("/fullname");
     }
 
-    get icon() {
-        return "face";
-    }
-
     static get idType() {
         return "string";
     }

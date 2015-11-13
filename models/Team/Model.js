@@ -9,10 +9,6 @@ module.exports = class Team extends Model {
         return this.id;
     }
 
-    get icon() {
-        return "group_work";
-    }
-
     static get idType() {
         return "string";
     }

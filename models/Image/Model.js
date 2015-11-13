@@ -9,10 +9,6 @@ module.exports = class Image extends Model {
         return this.at("/name");
     }
 
-    get icon() {
-        return "image";
-    }
-
     static get mapping() {
         return {
             name: {"type":"string"},

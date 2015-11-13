@@ -9,10 +9,6 @@ module.exports = class Mail extends Model {
         return this.at("/subject");
     }
 
-    get icon() {
-        return "mail";
-    }
-
     static get mapping() {
         return {
             from: {"type":"string"},

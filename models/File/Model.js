@@ -9,10 +9,6 @@ module.exports = class File extends Model {
         return this.at("/name");
     }
 
-    get icon() {
-        return "attach_file";
-    }
-
     static get mapping() {
         return {
             name: {"type":"string"},

@@ -1,16 +1,17 @@
 "use strict";
 
 const React = require("react");
+const Pure = require("react/lib/ReactComponentWithPureRenderMixin");
 const Inline = require("../../ui/mixins/Inline");
 
 module.exports = React.createClass({
     displayName: "MailInline",
-    mixins: [ Inline ],
+    mixins: [ Inline, Pure ],
 
     modelRender: function() {
         return (<div>
-            <span className="uk-text-muted">
-                {this.state.model.at("/from")} <i className="uk-icon-arrow-right"/>  {this.state.model.at("/to")}
+            <span>
+                {this.state.model.at("/from")} to {this.state.model.at("/to")}
             </span>
             <br/>
             {this.state.model.title}

@@ -1,6 +1,7 @@
 "use strict";
 
 const React = require("react");
+const Pure = require("react/lib/ReactComponentWithPureRenderMixin");
 const Inline = require("../../ui/mixins/Inline");
 
 const style = {
@@ -10,9 +11,9 @@ const style = {
 
 module.exports = React.createClass({
     displayName: "ImageInline",
-    mixins: [ Inline ],
+    mixins: [ Inline, Pure ],
 
     modelRender: function() {
-        return <p style={style}><img src="http://placehold.it/450x350"/></p>;
+        return <img style={style} src="http://placehold.it/450x350"/>;
     }
 });

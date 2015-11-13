@@ -9,10 +9,6 @@ module.exports = class Poll extends Model {
         return this.at("/title");
     }
 
-    get icon() {
-        return "thumbs_up_down";
-    }
-
     static get mapping() {
         return {
             title: {"type":"string"},
