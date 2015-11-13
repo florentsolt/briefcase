@@ -43,22 +43,22 @@ module.exports = {
         var doc = {};
         switch (name) {
         case "children":
-            doc.script = "ctx._source._parentsOf+=relation";
+            doc.script = "if (!ctx._source._parentsOf.contains(relation)) { ctx._source._parentsOf+=relation }";
             break;
         case "parents":
-            doc.script = "ctx._source._childrenOf+=relation";
+            doc.script = "if (!ctx._source._childrenOf.contains(relation)) { ctx._source._childrenOf+=relation }";
             break;
         case "followees":
-            doc.script = "ctx._source._followersOf+=relation";
+            doc.script = "if (!ctx._source._followersOf.contains(relation)) { ctx._source._followersOf+=relation }";
             break;
         case "followers":
-            doc.script = "ctx._source._followeesOf+=relation";
+            doc.script = "if (!ctx._source._followeesOf.contains(relation)) { ctx._source._followeesOf+=relation }";
             break;
         case "derivatives":
-            doc.script = "ctx._source._deriveTo+=relation";
+            doc.script = "if (!ctx._source._deriveTo.contains(relation)) { ctx._source._deriveTo+=relation }";
             break;
         case "derivators":
-            doc.script = "ctx._source._deriveFrom+=relation";
+            doc.script = "if (!ctx._source._deriveFrom.contains(relation)) { ctx._source._deriveFrom+=relation }";
             break;
         }
         if (!doc.script) return;

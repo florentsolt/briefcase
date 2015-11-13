@@ -192,8 +192,11 @@ if (process.env.__BROWSER) {
                     Redis.zadd(this.constructor.key(this.id, keys[key1]), "nx", ts, model.ref),
                     Redis.zadd(model.constructor.key(model.id, keys[key2]), "nx", ts, this.ref)
                 ]).then(() => {
-                    Es.addRelation(this, key1, model.ref),
+                    Es.addRelation(this, key1, model.ref);
+                    Es.addRelation(this, key1, model.ref.split("#", 2)[0]);
+
                     Es.addRelation(model, key2, this.ref);
+                    Es.addRelation(model, key2, this.ref.split("#", 2)[0]);
                 }).then(() => {
                     return this;
                 });

@@ -1,8 +1,9 @@
 "use strict";
 
+var path = require("path");
 var Es = require("../elasticsearch/client");
 var Redis = require("../redis/client");
-var path = require("path");
+var Logger = require("../inc/Logger");
 
 var query = process.argv[2];
 var sort = process.argv[3];
@@ -13,9 +14,9 @@ if (query === undefined) {
 }
 
 Es.search(query, sort).then((response) => {
-    console.log("Total: ", response.total);
-    response.models.forEach((model) => {
-        console.log(model);
+    Logger.info("Total:", response.total);
+    response.refs.forEach((refs) => {
+        Logger.info(refs);
     });
 }).then(() => {
     Redis.disconnect();
