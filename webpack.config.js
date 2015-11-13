@@ -65,7 +65,7 @@ if (process.env.NODE_ENV === "production") {
     );
 }
 else {
-    config.devtool = "source-map";
+    config.devtool = "eval-cheap-module-source-map";
 }
 
 require("./redis/client").disconnect();
