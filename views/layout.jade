@@ -5,27 +5,9 @@ html
         meta(http-equiv="X-UA-Compatible" content="IE=edge")
         meta(name="viewport" content="width=device-width, initial-scale=1")
         title= title
-        link(rel="stylesheet" href="//cdn.jsdelivr.net/flexboxgrid/6.3.0/flexboxgrid.min.css" type="text/css")
         link(href="https://fonts.googleapis.com/css?family=Roboto:400,300,500" rel="stylesheet" type="text/css")
         link(href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet")
-        link(rel="stylesheet" href="/stylesheets/style.css")
-        script(src="/javascripts/jquery-2.1.4.min.js")
 
     body
-        script.
-            // This script adds the Roboto font to our project. For more detail go to this site:  http://www.google.com/fonts#UsePlace:use/Collection:Roboto:400,300,500
-            var WebFontConfig = {
-                google: { families: [ 'Roboto:400,300,500:latin' ] }
-            };
-            (function() {
-                var wf = document.createElement('script');
-                wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
-                '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
-                wf.type = 'text/javascript';
-                wf.async = 'true';
-                var s = document.getElementsByTagName('script')[0];
-                s.parentNode.insertBefore(wf, s);
-            })();
-
         #app
             block content

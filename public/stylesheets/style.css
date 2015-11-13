@@ -35,33 +35,3 @@ input:-webkit-autofill {
     stroke: rgba(0, 188, 212, 0.8);
     stroke-width: 2px;
 }
-
-.tooltip {
-    position: relative;
-    background: #ebf7fd;
-    border: 1px solid rgba(45,112,145,.3);
-    margin-top: 20px;
-}
-.tooltip:after, .tooltip:before {
-    bottom: 100%;
-    left: 50px;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
-}
-
-.tooltip:after {
-    border-color: rgba(136, 183, 213, 0);
-    border-bottom-color: #ebf7fd;
-    border-width: 16px;
-    margin-left: -16px;
-}
-.tooltip:before {
-    border-color: rgba(194, 225, 245, 0);
-    border-bottom-color: rgba(45,112,145,.3);
-    border-width: 17px;
-    margin-left: -17px;
-}

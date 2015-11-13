@@ -7,6 +7,9 @@ const FontIcon = require("material-ui/lib/font-icon");
 const Login = require ("./Login");
 const AppNav = require ("./AppNav");
 
+require("flexboxgrid/css/flexboxgrid.css");
+require("../../public/stylesheets/style.css");
+
 module.exports = React.createClass({
     displayName: "App",
     mixins: [ History ],

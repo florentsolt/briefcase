@@ -17,19 +17,19 @@ var config = {
             {
                 test: /(models\/.*|inc)\/.*\.js$/,
                 exclude: /node_modules/,
-                loader: "babel",
+                loader: "babel-loader",
                 query: {
                     presets: ["es2015", "react"]
                 }
             },
             {
                 test: /\.css$/,
-                loader: "style!css"
+                loader: "style-loader!css-loader"
             },
             {
                 test: /\.jsx$/,
                 exclude: /node_modules/,
-                loader: "babel",
+                loader: "babel-loader",
                 query: {
                     presets: ["es2015", "react"]
                 }
@@ -37,6 +37,11 @@ var config = {
         ]
     },
     plugins: [
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery",
+            "window.jQuery": "jquery"
+        }),
         new webpack.DefinePlugin({
             "process.env": {
                 NODE_ENV: JSON.stringify(process.env.NODE_ENV || ""),
