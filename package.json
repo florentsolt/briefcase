@@ -4,6 +4,7 @@
   "description": "Briefcase",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "NODE_ENV=test node ./utils/flush.js; NODE_ENV=test node ./node_modules/.bin/jasmine",
     "redis-start": "redis-server redis/redis.conf",
     "redis-stop": "redis-cli -s /tmp/redis.sock shutdown",

@@ -9,6 +9,6 @@ Then add these 2 lines at the end your elasticsearch.yml config file:
 Then, start elasticsearch $> elasticsearch
 Then, you need to fill redis $> node utils/fake.js
 Then, build the bundle $> npm run bundle (or run "watch" in dev mode)
-Then, start the web app $> node app.js
+Then, start the web app $> npm start
 
 The default account (created in fake.js) is admin/admin.
