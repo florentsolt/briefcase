@@ -158,14 +158,12 @@ if (process.env.__BROWSER) {
             if (!Array.isArray(ids)) {
                 return Redis.hget(this.name, ids)
                     .then((data) => {
-                        let model = this.decode(data);
-                        return model ? model._include() : model;
+                        return this.decode(data);
                     });
             } else {
                 return Redis.hmget(this.name, ids)
                     .map((data) => {
-                        let model = this.decode(data);
-                        return model ? model._include() : model;
+                        return this.decode(data);
                     });
             }
         }

@@ -1,5 +1,6 @@
 const React = require("react");
 const History = require("react-router").History;
+const Promise = require("bluebird");
 
 const Paper = require("material-ui/lib/paper");
 const List = require("material-ui/lib/lists/list");
@@ -68,6 +69,13 @@ module.exports = React.createClass({
         // if (offset === 0) this.setState({models: false});
 
         Storage.search(filteredQuery, sort, offset, size).then((response) => {
+
+            // Resolve refs into models
+            return Promise.map(response.refs, (ref) => Storage.get(ref))
+                .then((models) => response.models = models)
+                .then(() => response);
+
+        }).then((response) => {
             this.setState({
                 loading: false,
                 models: (this.state.models || []).concat(response.models),

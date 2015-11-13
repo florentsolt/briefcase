@@ -17,13 +17,13 @@ if (process.env.__BROWSER) {
         constructor(meta, data) {
             super(meta, data);
 
-            if (meta && data) {
+            if (meta && meta.r && data) {
                 this.meta.r = meta.r;
 
                 for (let key in keys) {
                     if (this.meta.r[keys[key]]) {
-                        // If an entry in meta.r is avail, inline the date at the toplevel on the model
-                        this[key] = this.meta.r[keys[key]].map((model) => SerializableModel.decode(model));
+                        // If an entry in meta.r is avail, inline the data at the toplevel on the model
+                        this[key] = this.meta.r[keys[key]];
                     }
                 }
 
@@ -106,21 +106,32 @@ if (process.env.__BROWSER) {
             return this._list("derivators", scores);
         }
 
-        // Private
+        // Relation inclusion or list
 
-        _include() {
-            var includes = ["parents", "derivators", "followers"];
+        includeRelations() {
             this.meta.r = {};
-            return Promise.each(includes || [], (include) => {
-                if (keys[include]) {
-                    return this._list(include).then((models) => {
-                        this.meta.r[keys[include]] = models.map((model) => model.encode(true));
-                    });
-                }
+            return Promise.each(Object.keys(keys), (include) => {
+                return this._refList(include).then((refs) => {
+                    this.meta.r[keys[include]] = refs;
+                });
             }).then(() => this);
         }
 
-        _resolveRef(ref) {
+        getAllRelationsRefs() {
+            if (this.meta.r) {
+                var allRefs = [];
+                for (let key in this.meta.r) {
+                    allRefs = allRefs.concat(this.meta.r[key]);
+                }
+                return allRefs;
+            } else {
+                return [];
+            }
+        }
+
+        // Private
+
+        static _resolveRef(ref) {
             ref = ref.split("#", 2);
             let klass = Directory.model(ref[0]);
             if (klass !== undefined) {
@@ -131,7 +142,7 @@ if (process.env.__BROWSER) {
         }
 
         _list(key, scores) {
-            return Promise.map(this._refList(key, scores), (ref) => this._resolveRef(ref));
+            return Promise.map(this._refList(key, scores), (ref) => this.constructor._resolveRef(ref));
         }
 
         _refList(key, scores) {
@@ -188,7 +199,7 @@ if (process.env.__BROWSER) {
                 });
             } else if (typeof modelOrRef === "string") {
                 let ref = modelOrRef;
-                return this._resolveRef(ref).then((model) => {
+                return this.constructor._resolveRef(ref).then((model) => {
                     if (model) {
                         return this._push(key1, key2, model);
                     } else {

@@ -41,11 +41,13 @@ class Storage extends events.EventEmitter {
             }).fail(reject);
 
         }).then((response) => {
-            response.models = response.models.map((data) => {
-                let model = Model.decode(data);
-                cache.set(model.ref, model);
-                return model;
-            });
+            if (response.prefetch) {
+                response.prefetch.forEach((data) => {
+                    let model = Model.decode(data);
+                    cache.set(model.ref, model);
+                });
+                delete(response.prefetch);
+            }
             return response;
         });
     }

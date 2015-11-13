@@ -5,7 +5,6 @@ var elasticsearch = require("elasticsearch");
 var extend = require("util")._extend;
 var Directory = require("../inc/Directory");
 var Logger = require("../inc/Logger");
-var Model = require("../inc/IsomorphicModel");
 
 var client = new elasticsearch.Client({
     // log: "trace",
@@ -144,6 +143,8 @@ module.exports = {
     },
 
     search: function(query, sort, offset, size) {
+        var Model = require("../inc/Model"); // require is done here to prevent cycle
+
         if (typeof sort === "string" && sort.trim().match(/^\d+$/)) {
             sort = false;
             offset = sort;
@@ -188,12 +189,38 @@ module.exports = {
                 } else {
                     return undefined;
                 }
+
             }).filter((model) => {
+                // If find() did not work or if the object was unkown
                 return model && model instanceof Model;
+
+            }).map((model) => {
+                return model.includeRelations();
+
+            }).then((models) => {
+                var existingRefs = models.map((model) => model.ref);
+                var refs = models.map((model) => model.getAllRelationsRefs())
+                    .reduce((a, b) => a.concat(b), []) // flatten
+                    .filter((ref) => { // uniq
+                        if (existingRefs.indexOf(ref) === -1) {
+                            existingRefs.push(ref);
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    });
+
+
+                return Promise
+                    .map(refs, (ref) => Model._resolveRef(ref))
+                    .each((model) => models.push(model))
+                    .then(() => models);
+
             }).then((models) => {
                 return {
                     total: response.hits.total,
-                    models: models,
+                    refs: response.hits.hits.map((hit) => hit._type + "#" + hit._id), // models,
+                    prefetch: models,
                     offset: offset,
                     size: size,
                     aggregation: response.aggregations ? response.aggregations.models_over_time.buckets : false
