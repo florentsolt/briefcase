@@ -1,0 +1,67 @@
+html, button, input, select, textarea {
+    font-family: 'Roboto', sans-serif;
+}
+
+body, html {
+    padding: 0px;
+    margin: 0px;
+    background-color: #f2f2f2;
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+
+.d3 .guides line {
+    fill: none;
+    stroke: rgba(180, 180, 180, 0.5);
+    shape-rendering: crispEdges;
+    stroke-width: 1px;
+    stroke-dasharray: 5, 5
+}
+
+.d3 .axis path,
+.d3 .axis line {
+    display: none
+}
+
+.d3 .axis .tick text {
+    font-size: 12px;
+    fill: rgba(180, 180, 180, 0.8);
+}
+
+.d3 .area {
+    fill: rgba(0, 188, 212, 0.1);
+    stroke: rgba(0, 188, 212, 0.8);
+    stroke-width: 2px;
+}
+
+.tooltip {
+    position: relative;
+    background: #ebf7fd;
+    border: 1px solid rgba(45,112,145,.3);
+    margin-top: 20px;
+}
+.tooltip:after, .tooltip:before {
+    bottom: 100%;
+    left: 50px;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.tooltip:after {
+    border-color: rgba(136, 183, 213, 0);
+    border-bottom-color: #ebf7fd;
+    border-width: 16px;
+    margin-left: -16px;
+}
+.tooltip:before {
+    border-color: rgba(194, 225, 245, 0);
+    border-bottom-color: rgba(45,112,145,.3);
+    border-width: 17px;
+    margin-left: -17px;
+}

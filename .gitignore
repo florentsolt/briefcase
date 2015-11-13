@@ -1,0 +1,6 @@
+node_modules
+npm-debug.log
+redis/dump.rdb
+public/bundle.js
+public/bundle.js.map
+.DS_Store

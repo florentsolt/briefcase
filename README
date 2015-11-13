@@ -1,0 +1,14 @@
+You need redis in your path to work (the conf used is in the root folder);
+
+Then $> npm install
+Then, start redis $> npm run redis-start
+Then add these 2 lines at the end your elasticsearch.yml config file:
+    script.inline: true
+    script.indexed: true
+
+Then, start elasticsearch $> elasticsearch
+Then, you need to fill redis $> node utils/fake.js
+Then, build the bundle $> npm run bundle (or run "watch" in dev mode)
+Then, start the web app $> node app.js
+
+The default account (created in fake.js) is admin/admin.

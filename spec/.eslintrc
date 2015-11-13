@@ -1,0 +1,8 @@
+{
+    "rules": {
+        "max-nested-callbacks":     [2, 5]
+    },
+    "env": {
+        "jasmine": true,
+    }
+}
