@@ -47,8 +47,6 @@ class Search extends Pure {
         };
 
         this.loadOneMorePage = this.loadOneMorePage.bind(this);
-        this.onRowClick = this.onRowClick.bind(this);
-
     }
 
     componentWillReceiveProps(nextProps) {
@@ -148,15 +146,17 @@ class Search extends Pure {
         }
     }
 
-    onRowClick(model) {
-        if (this.props.expand) {
-            if (this.state.expand === model.ref) {
-                this.setState({expand: false});
+    onRowClick() {
+        // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-no-bind.md#lists-of-items
+        // parent & model are passsed as props
+        if (this.parent.props.expand) {
+            if (this.parent.state.expand === this.model.ref) {
+                this.parent.setState({expand: false});
             } else {
-                this.setState({expand: model.ref});
+                this.parent.setState({expand: this.model.ref});
             }
         } else {
-            History.pushState(undefined, `/${model.constructor.name}/${model.id}`, undefined);
+            History.pushState(undefined, `/${this.model.constructor.name}/${this.model.id}`, undefined);
         }
     }
 
@@ -191,6 +191,8 @@ class Search extends Pure {
                     <ListItem key={item.ref}
                         disabled={Directory.hasPanel(item.constructor.name)}
                         onTouchTap={this.onRowClick}
+                        model={item}
+                        parent={this}
                         rightIconButton={<Menu/>}
                         leftIcon={<Loader ui={Directory.icon(item.constructor.name)} model={item.ref}/>}
                         primaryText={<Loader ui={Directory.inline(item.constructor.name)} model={item.ref}/>}
