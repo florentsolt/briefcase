@@ -1,20 +1,18 @@
 const React = require("react");
-const Pure = require("react-addons-pure-render-mixin");
 
 const Paper = require("material-ui/lib/paper");
 const TextField = require("material-ui/lib/text-field");
 const FontIcon = require("material-ui/lib/font-icon");
 
+const Pure = require("../inc/Pure");
 
-var Login = React.createClass({
-    displayName: "Login",
-    mixins: [ Pure ],
+class Login extends Pure {
 
-    onEnterKeyDown: function() {
+    onEnterKeyDown() {
         this.refs.form.submit();
-    },
+    }
 
-    render: function() {
+    render() {
         let style = {
             height: "100%",
             display: "inline-block",
@@ -31,12 +29,12 @@ var Login = React.createClass({
                         Brieƒcαse
                     </div>
                     <form ref="form" method="post" action="/login">
-                        <TextField hintText="Username" name="username" style={{width: "100%"}} onEnterKeyDown={this.onEnterKeyDown}/>
-                        <TextField hintText="Password" name="password" style={{width: "100%"}} type="password" onEnterKeyDown={this.onEnterKeyDown}/>
+                        <TextField hintText="Username" name="username" style={{width: "100%"}} onEnterKeyDown={this.onEnterKeyDown.bind(this)}/>
+                        <TextField hintText="Password" name="password" style={{width: "100%"}} type="password" onEnterKeyDown={this.onEnterKeyDown.bind(this)}/>
                     </form>
                 </Paper>
         );
     }
-});
+}
 
 module.exports = Login;

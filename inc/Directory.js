@@ -12,6 +12,10 @@ exports.panel = function(name) {
     }
 };
 
+exports.hasPanel = function(name) {
+    exports.panel(name) !== false;
+};
+
 exports.inline = function(name) {
     try {
         return require("../models/" + name + "/Inline");

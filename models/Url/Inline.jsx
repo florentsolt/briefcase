@@ -1,18 +1,16 @@
 "use strict";
 
 const React = require("react");
-const Pure = require("react-addons-pure-render-mixin");
-const Inline = require("../../ui/mixins/Inline");
+const Pure = require("../../ui/inc/Pure");
 
-module.exports = React.createClass({
-    displayName: "UrlInline",
-    mixins: [ Inline, Pure ],
+class UrlInline extends Pure {
 
-    modelRender: function() {
-        return  (
-            <span>
-                {this.state.model.title} — <a href={this.state.model.at("/url")}>{this.state.model.at("/url")}</a>
-            </span>
-        );
+    render() {
+        return (<div>
+            {this.props.model.title} — <a href={this.props.model.at("/url")}>{this.props.model.at("/url")}</a>
+        </div>);
     }
-});
+
+}
+
+module.exports = UrlInline;

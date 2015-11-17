@@ -1,14 +1,15 @@
 "use strict";
 
 const React = require("react");
-const Pure = require("react-addons-pure-render-mixin");
 const FontIcon = require("material-ui/lib/font-icon");
+const Pure = require("../../ui/inc/Pure");
 
-module.exports = React.createClass({
-    displayName: "TeamIcon",
-    mixins: [ Pure ],
+class TeamIcon extends Pure {
 
-    render: function() {
+    render() {
         return (<FontIcon style={this.props.style} className="material-icons">group_work</FontIcon>);
     }
-});
+
+}
+
+module.exports = TeamIcon;

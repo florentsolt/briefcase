@@ -1,31 +1,30 @@
 const d3 = require("d3");
 const React = require("react");
 const ReactDOM = require("react-dom");
-const Pure = require("react-addons-pure-render-mixin");
+const Pure = require("../inc/Pure");
 
-module.exports = React.createClass({
-    displayName: "Chart",
-    mixins: [ Pure ],
+class Chart extends Pure {
 
-    getInitialState: function() {
-        return {
+    constructor(props) {
+        super(props);
+        this.state = {
             width: false,
             height: false,
             data: false,
             margin: {top: 20, right: 30, bottom: 30, left: 50}
         };
-    },
+    }
 
-    componentDidMount: function() {
+    componentDidMount() {
         var el = ReactDOM.findDOMNode(this);
         this.setState({
             width: el.offsetWidth - this.state.margin.left - this.state.margin.right,
             height: el.offsetHeight - this.state.margin.top - this.state.margin.bottom
         });
         this.componentWillReceiveProps(this.props);
-    },
+    }
 
-    componentWillReceiveProps: function(nextProps) {
+    componentWillReceiveProps(nextProps) {
         var parse = d3.time.format("%Y-%m-%d").parse;
 
         this.setState({
@@ -36,9 +35,9 @@ module.exports = React.createClass({
                 };
             })
         });
-    },
+    }
 
-    chart: function() {
+    chart() {
         if (!this.state.width || !this.state.height || !this.state.data) {
             // Even if we are not mounted yet, return some tags with refs for later use
             return (
@@ -96,9 +95,9 @@ module.exports = React.createClass({
                 <g className="guides">{guides}</g>
             </g>
         );
-    },
+    }
 
-    render: function() {
+    render() {
         return (
             <div>
                 <svg width="100%" height="200px" className="d3">
@@ -107,4 +106,6 @@ module.exports = React.createClass({
             </div>
         );
     }
-});
+}
+
+module.exports = Chart;

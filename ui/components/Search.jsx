@@ -1,5 +1,4 @@
 const React = require("react");
-const History = require("react-router").History;
 const Promise = require("bluebird");
 
 const Paper = require("material-ui/lib/paper");
@@ -14,6 +13,10 @@ const IconButton = require("material-ui/lib/icon-button");
 const TextField = require("material-ui/lib/text-field");
 const DropDownMenu = require("material-ui/lib/drop-down-menu");
 
+const History = require("../inc/History");
+const Pure = require("../inc/Pure");
+
+const Loader = require("../inc/Loader");
 const Chart = require("./Chart");
 const Waypoint = require("react-waypoint");
 
@@ -24,47 +27,53 @@ const Spinner = require ("./Spinner");
 const Context = require("./Context");
 const Menu = require("./Menu");
 
-module.exports = React.createClass({
-    displayName: "Search",
-    mixins: [ History ],
+class Search extends Pure {
 
-    getInitialState: function() {
-        return {
+    constructor(props) {
+        super(props);
+        this.state = {
             models: false,
             expand: false,
             loading: false,
             endReached: false,
             filter: false,
-            aggregation: false
+            aggregation: false,
+
+            query: this.props.query,
+            sort: this.props.sort || "createdAt:desc",
+            offset: -(this.props.size || 25),
+            size: this.props.size || 25
         };
-    },
+    }
 
-    componentDidMount: function() {
-        this.componentWillReceiveProps(this.props);
-    },
-
-    componentWillReceiveProps: function(nextProps) {
+    componentWillReceiveProps(nextProps) {
         if (nextProps.query !== this.state.query) {
             this.setState({
                 query: nextProps.query,
                 sort: nextProps.sort || "createdAt:desc",
                 offset: -(nextProps.size || 25),
                 size: nextProps.size || 25,
+
                 models: false,
-                aggregation: false
+                aggregation: false,
+                endReached: false
             });
         }
-    },
+    }
 
-    shouldComponentUpdate: function(nextProps, nextState) {
-        if (nextState.loading === true) {
-            return false;
+    shouldComponentUpdate(nextProps, nextState) {
+        if (super.shouldComponentUpdate() === true) {
+            if (nextState.loading === true) {
+                return false;
+            } else {
+                return true;
+            }
         } else {
-            return true;
+            return false;
         }
-    },
+    }
 
-    requestSearch: function(query, sort, filter, offset, size) {
+    requestSearch(query, sort, filter, offset, size) {
         var filteredQuery = filter ? `(${query}) AND (${filter})` : query;
         // if (offset === 0) this.setState({models: false});
 
@@ -89,21 +98,21 @@ module.exports = React.createClass({
                 endReached: response.total < size
             });
         });
-    },
+    }
 
-    loadOneMorePage: function() {
+    loadOneMorePage() {
         if (!this.state.endReached) {
             this.setState({loading: true});
             this.requestSearch(this.state.query, this.state.sort, this.state.filter, this.state.offset + this.state.size, this.state.size);
         }
-    },
+    }
 
-    onFilter: function(event) {
+    onFilter(event) {
         event.preventDefault();
         this.requestSearch(this.state.query, this.state.sort, this.refs.filter.getValue().trim(), 0, this.state.size);
-    },
+    }
 
-    toolbar: function() {
+    toolbar() {
         if (this.props.toolbar) {
             let iconButtonElement = <IconButton style={{verticalAlign: "middle"}} iconClassName="material-icons" tooltipPosition="bottom-center" tooltip="Preset">filter_list</IconButton>;
             let menuItems = [
@@ -133,17 +142,17 @@ module.exports = React.createClass({
         } else {
             return false;
         }
-    },
+    }
 
-    chart: function() {
+    chart() {
         if (this.props.chart && this.state.aggregation) {
             return <Chart data={this.state.aggregation}/>;
         } else {
             return false;
         }
-    },
+    }
 
-    onRowClick: function(model) {
+    onRowClick(model) {
         if (this.props.expand) {
             if (this.state.expand === model.ref) {
                 this.setState({expand: false});
@@ -151,11 +160,11 @@ module.exports = React.createClass({
                 this.setState({expand: model.ref});
             }
         } else {
-            this.history.pushState(undefined, `/${model.constructor.name}/${model.id}`, undefined);
+            History.pushState(undefined, `/${model.constructor.name}/${model.id}`, undefined);
         }
-    },
+    }
 
-    expand: function(model) {
+    expand(model) {
         let Self = this.constructor;
 
         if (this.props.expand && this.state.expand === model.ref) {
@@ -168,31 +177,27 @@ module.exports = React.createClass({
             return false;
         }
 
-    },
+    }
 
-    render: function() {
+    render() {
         if (this.state.models ===  false) {
             return (
                 <div>
                     <Spinner/>
-                    {this.state.query && <Waypoint onEnter={this.loadOneMorePage}/>}
+                    {this.state.query && <Waypoint onEnter={this.loadOneMorePage.bind(this)}/>}
                 </div>
             );
         } else {
             let rows = [];
 
             this.state.models.forEach((item) => {
-                var Icon = Directory.icon(item.constructor.name);
-                var Inline = Directory.inline(item.constructor.name);
-                var Panel = Directory.panel(item.constructor.name);
-
                 rows.push(
                     <ListItem key={item.ref}
-                        disabled={Panel ? false : true}
+                        disabled={Directory.hasPanel(item.constructor.name)}
                         onTouchTap={this.onRowClick.bind(this, item)}
                         rightIconButton={<Menu/>}
-                        leftIcon={Icon && <Icon model={item}/>}
-                        primaryText={<Inline model={item}/>}
+                        leftIcon={<Loader ui={Directory.icon(item.constructor.name)} model={item.ref}/>}
+                        primaryText={<Loader ui={Directory.inline(item.constructor.name)} model={item.ref}/>}
                         secondaryText={<Context followers={this.props.followers} derivators={this.props.derivators} parents={this.props.parents} date={this.props.date} model={item}/>}æ/>
                 );
                 rows.push(this.expand(item));
@@ -228,7 +233,7 @@ module.exports = React.createClass({
                                 {rows.slice(10, -1)}
                             </List>
                         </Paper>
-                        {!this.state.loading ? <Waypoint onEnter={this.loadOneMorePage}/> : false}
+                        {!this.state.loading ? <Waypoint onEnter={this.loadOneMorePage.bind(this)}/> : false}
                     </div>
                 );
             } else {
@@ -239,10 +244,12 @@ module.exports = React.createClass({
                         <List style={{paddingTop: "0px", paddingBottom: "0px"}}>
                             {rows}
                         </List>
-                        {!this.state.loading ? <Waypoint onEnter={this.loadOneMorePage}/> : false}
+                        {!this.state.loading ? <Waypoint onEnter={this.loadOneMorePage.bind(this)}/> : false}
                     </Paper>
                 );
             }
         }
     }
-});
+}
+
+module.exports = Search;

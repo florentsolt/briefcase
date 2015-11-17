@@ -1,20 +1,20 @@
 "use strict";
 
 const React = require("react");
-const Pure = require("react-addons-pure-render-mixin");
-const Inline = require("../../ui/mixins/Inline");
+const Pure = require("../../ui/inc/Pure");
 
-module.exports = React.createClass({
-    displayName: "MailInline",
-    mixins: [ Inline, Pure ],
+class MailInine extends Pure {
 
-    modelRender: function() {
+    render() {
         return (<div>
             <span>
-                {this.state.model.at("/from")} to {this.state.model.at("/to")}
+                {this.props.model.at("/from")} to {this.props.model.at("/to")}
             </span>
             <br/>
-            {this.state.model.title}
+            {this.props.model.title}
         </div>);
     }
-});
+
+}
+
+module.exports = MailInine;

@@ -4,10 +4,10 @@ const IconButton = require("material-ui/lib/icon-button");
 const IconMenu = require("material-ui/lib/menus/icon-menu");
 const MenuItem = require("material-ui/lib/menus/menu-item");
 
-module.exports = React.createClass({
-    displayName: "Menu",
+const Pure = require("../inc/Pure");
 
-    render: function() {
+class Menu extends Pure {
+    render() {
         let iconButtonElement = <IconButton><FontIcon className="material-icons">more_vert</FontIcon></IconButton>;
         return(
             <IconMenu {...this.props} iconButtonElement={iconButtonElement}>
@@ -18,4 +18,6 @@ module.exports = React.createClass({
             </IconMenu>
         );
     }
-});
+}
+
+module.exports = Menu;

@@ -1,20 +1,23 @@
 "use strict";
 
 const React = require("react");
-const Pure = require("react-addons-pure-render-mixin");
-const Panel = require("../../ui/mixins/Panel");
-const ModelProperty = require("../../ui/components/ModelProperty");
 
-module.exports = React.createClass({
-    displayName: "UserPanel",
-    mixins: [ Panel, Pure ],
+const Pure = require("../../ui/inc/Pure");
+const Panel = require("../../ui/inc/Panel");
+const Children = require("../../ui/inc/Children");
 
-    modelRender: function() {
-        return (
-            <div>
-                <ModelProperty label="Fullname" value={this.state.model.at("/fullname")} />
-                <ModelProperty label="Username" value={this.state.model.at("/username")} />
-            </div>
-        );
+class UserPanel extends Pure {
+
+    render() {
+        return (<div>
+            <Panel model={this.props.model}>
+                <strong>Full name</strong> {this.props.model.at("/fullname")}<br/>
+                <strong>Username</strong> {this.props.model.id}
+            </Panel>
+            <Children model={this.props.model}/>
+        </div>);
     }
-});
+
+}
+
+module.exports = UserPanel;

@@ -3,7 +3,6 @@ const ReactDOM = require("react-dom");
 const Router = require("react-router").Router;
 const Route = require("react-router").Route;
 const IndexRoute = require("react-router").IndexRoute;
-const createHistory = require("history").createHistory;
 const injectTapEventPlugin = require("react-tap-event-plugin");
 
 //Needed for onTouchTap
@@ -12,7 +11,7 @@ const injectTapEventPlugin = require("react-tap-event-plugin");
 //https://github.com/zilverline/react-tap-event-plugin
 injectTapEventPlugin();
 
-
+const History = require("./inc/History");
 const App = require("./components/App");
 
 const Inbox = require("./routes/Inbox");
@@ -23,10 +22,9 @@ const Model = require("./routes/Model");
 const User = require("../models/User/Model");
 
 window.Me = window.Me && User.decode(window.Me);
-var history = createHistory();
 
 ReactDOM.render((
-    <Router history={history}>
+    <Router history={History}>
         <Route path="/" component={App}>
             <IndexRoute component={Inbox}/>
             <Route path="browse" component={Browse}/>

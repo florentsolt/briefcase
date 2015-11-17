@@ -1,15 +1,21 @@
 "use strict";
 
 const React = require("react");
-const Pure = require("react-addons-pure-render-mixin");
-const Panel = require("../../ui/mixins/Panel");
+const textile = require("textile-js");
 
-module.exports = React.createClass({
-    displayName: "TeamPanel",
-    mixins: [ Panel, Pure ],
+const Pure = require("../../ui/inc/Pure");
+const Panel = require("../../ui/inc/Panel");
+const Children = require("../../ui/inc/Children");
 
-    modelRender: function() {
-        return false;
+class TeamPanel extends Pure {
+
+    render() {
+        return (<div>
+            <Panel model={this.props.model}/>
+            <Children model={this.props.model}/>
+        </div>);
     }
 
-});
+}
+
+module.exports = TeamPanel;

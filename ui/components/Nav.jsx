@@ -1,5 +1,4 @@
 const React = require("react");
-const History = require("react-router").History;
 
 const AppBar = require("material-ui/lib/app-bar");
 const TextField = require("material-ui/lib/text-field");
@@ -9,16 +8,16 @@ const IconButton = require("material-ui/lib/icon-button");
 const Typography = require("material-ui/lib/styles/typography");
 const Item = require("material-ui/lib/menus/menu-item");
 
-module.exports = React.createClass({
-    displayName: "AppNav",
-    mixins: [ History ],
+const History = require("../inc/History");
+const Pure = require("../inc/Pure");
 
-    onEnterKeyDown: function() {
-        this.history.pushState(undefined, `/search/${encodeURIComponent(this.refs.query.getValue().trim())}`, undefined);
+class Nav extends Pure {
 
-    },
+    onEnterKeyDown() {
+        History.pushState(undefined, `/search/${encodeURIComponent(this.refs.query.getValue().trim())}`, undefined);
+    }
 
-    render: function() {
+    render() {
         let iconButtonElement = <IconButton iconClassName="material-icons" tooltipPosition="bottom-center" tooltip="Preset">search</IconButton>;
 
         let style = {
@@ -45,4 +44,6 @@ module.exports = React.createClass({
           </div>
       );
     }
-});
+}
+
+module.exports = Nav;

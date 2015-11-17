@@ -1,52 +1,53 @@
 const React = require("react");
-const History = require("react-router").History;
 const List = require("material-ui/lib/lists/list");
 const ListItem = require("material-ui/lib/lists/list-item");
 const ListDivider = require("material-ui/lib/lists/list-divider");
 const FontIcon = require("material-ui/lib/font-icon");
+
+const History = require("../inc/History");
+const Pure = require("../inc/Pure");
+
 const Login = require ("./Login");
-const AppNav = require ("./AppNav");
+const Nav = require ("./Nav");
 
 require("flexboxgrid/css/flexboxgrid.css");
 require("../../public/stylesheets/style.css");
 
-module.exports = React.createClass({
-    displayName: "App",
-    mixins: [ History ],
+class App extends Pure {
 
-    goInbox: function() {
-        this.history.pushState(undefined, "/", undefined);
-    },
+    goInbox() {
+        History.pushState(undefined, "/", undefined);
+    }
 
-    goFollowing: function() {
-        this.history.pushState(undefined, "/inbox/following", undefined);
-    },
+    goFollowing() {
+        History.pushState(undefined, "/inbox/following", undefined);
+    }
 
-    goDerivates: function() {
-        this.history.pushState(undefined, "/inbox/derivates", undefined);
-    },
+    goDerivates() {
+        History.pushState(undefined, "/inbox/derivates", undefined);
+    }
 
-    goPinned: function() {
-        this.history.pushState(undefined, "/inbox/pinned", undefined);
-    },
+    goPinned() {
+        History.pushState(undefined, "/inbox/pinned", undefined);
+    }
 
-    goSnoozed: function() {
-        this.history.pushState(undefined, "/inbox/snoozed", undefined);
-    },
+    goSnoozed() {
+        History.pushState(undefined, "/inbox/snoozed", undefined);
+    }
 
-    goBrowse: function() {
-        this.history.pushState(undefined, "/browse", undefined);
-    },
+    goBrowse() {
+        History.pushState(undefined, "/browse", undefined);
+    }
 
-    goMyAccount: function() {
-        this.history.pushState(undefined, "/me", undefined);
-    },
+    goMyAccount() {
+        History.pushState(undefined, "/me", undefined);
+    }
 
-    goLogout: function() {
+    goLogout() {
         window.location.href = "/logout";
-    },
+    }
 
-    render: function() {
+    render() {
         if (!window.Me) {
             return (
                 <Login/>
@@ -54,7 +55,7 @@ module.exports = React.createClass({
         } else {
             return (
                 <div>
-                    <AppNav query={this.props.params.query}/>
+                    <Nav query={this.props.params.query}/>
                     <div className="row">
                         <div className="col-xs-12 last-xs col-sm-3 col-md-2 col-lg-2">
                             <List style={{marginTop: "1em", backgroundColor: "transparent"}}>
@@ -79,4 +80,6 @@ module.exports = React.createClass({
             );
         }
     }
-});
+}
+
+module.exports = App;

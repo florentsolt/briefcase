@@ -1,12 +1,15 @@
 const React = require("react");
 const CircularProgress = require("material-ui/lib/circular-progress");
 
-module.exports = React.createClass({
-    displayName: "Spinner",
+const Pure = require("../inc/Pure");
 
-    render: function() {
+class Spinner extends Pure {
+
+    render() {
         return(
             <center><CircularProgress mode="indeterminate" /></center>
         );
     }
-});
+}
+
+module.exports = Spinner;

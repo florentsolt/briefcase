@@ -1,39 +1,42 @@
 "use strict";
 
 const React = require("react");
-const Pure = require("react-addons-pure-render-mixin");
 const textile = require("textile-js");
 
-const Panel = require("../../ui/mixins/Panel");
+const Pure = require("../../ui/inc/Pure");
+const Panel = require("../../ui/inc/Panel");
+const Children = require("../../ui/inc/Children");
+
 const TimeAgo = require("../../ui/components/TimeAgo");
 
-module.exports = React.createClass({
-    displayName: "IssuePanel",
-    mixins: [ Panel, Pure ],
+class IssuePanel extends Pure {
 
-    modelRender: function() {
-        return (
-            <div>
-                <div dangerouslySetInnerHTML={{__html: textile(this.state.model.at("/description"))}}></div>
+    render() {
+        return (<div>
+            <Panel model={this.props.model}>
+                <div dangerouslySetInnerHTML={{__html: textile(this.props.model.at("/description"))}}></div>
                 <ul>
                     <li>
-                        <strong>Created At</strong>
-                        <TimeAgo date={this.state.model.createdAt}/>
+                        <strong>Created At</strong> <TimeAgo date={this.props.model.createdAt}/>
                     </li>
 
                     <li>
-                        <strong>Updated At</strong> <TimeAgo date={this.state.model.updatedAt}/>
+                        <strong>Updated At</strong> <TimeAgo date={this.props.model.updatedAt}/>
                     </li>
 
                     <li>
-                        <strong>Priority</strong> {this.state.model.at("/priority")}
+                        <strong>Priority</strong> {this.props.model.at("/priority")}
                     </li>
 
                     <li>
-                        <strong>Status</strong> {this.state.model.at("/status")}
+                        <strong>Status</strong> {this.props.model.at("/status")}
                     </li>
                 </ul>
-            </div>
-      );
+            </Panel>
+            <Children model={this.props.model}/>
+        </div>);
     }
-});
+
+}
+
+module.exports = IssuePanel;
