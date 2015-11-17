@@ -1,3 +1,5 @@
+"use strict";
+
 const React = require("react");
 
 const Paper = require("material-ui/lib/paper");
@@ -7,6 +9,11 @@ const FontIcon = require("material-ui/lib/font-icon");
 const Pure = require("../inc/Pure");
 
 class Login extends Pure {
+
+    constructor() {
+        super();
+        this.onEnterKeyDown = this.onEnterKeyDown.bind(this);
+    }
 
     onEnterKeyDown() {
         this.refs.form.submit();
@@ -29,8 +36,8 @@ class Login extends Pure {
                         Brieƒcαse
                     </div>
                     <form ref="form" method="post" action="/login">
-                        <TextField hintText="Username" name="username" style={{width: "100%"}} onEnterKeyDown={this.onEnterKeyDown.bind(this)}/>
-                        <TextField hintText="Password" name="password" style={{width: "100%"}} type="password" onEnterKeyDown={this.onEnterKeyDown.bind(this)}/>
+                        <TextField hintText="Username" name="username" style={{width: "100%"}} onEnterKeyDown={this.onEnterKeyDown}/>
+                        <TextField hintText="Password" name="password" style={{width: "100%"}} type="password" onEnterKeyDown={this.onEnterKeyDown}/>
                     </form>
                 </Paper>
         );

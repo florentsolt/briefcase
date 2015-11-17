@@ -1,3 +1,5 @@
+"use strict";
+
 const React = require("react");
 const List = require("material-ui/lib/lists/list");
 const ListItem = require("material-ui/lib/lists/list-item");

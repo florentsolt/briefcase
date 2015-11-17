@@ -1,3 +1,5 @@
+"use strict";
+
 const React = require("react");
 const Search = require("../components/Search");
 
@@ -34,7 +36,7 @@ module.exports = React.createClass({
     render: function() {
         return (
             <div>
-                <Search inbox derivators parents query={this.query()} sort="createdAt:desc"/>
+                <Search toolbar inbox derivators parents query={this.query()} sort="createdAt:desc"/>
             </div>
         );
     }

@@ -1,17 +1,17 @@
+"use strict";
+
 const React = require("react");
 const Promise = require("bluebird");
 
 const Paper = require("material-ui/lib/paper");
 const List = require("material-ui/lib/lists/list");
 const ListItem = require("material-ui/lib/lists/list-item");
-const FontIcon = require("material-ui/lib/font-icon");
 const Item = require("material-ui/lib/menus/menu-item");
 const IconMenu = require("material-ui/lib/menus/icon-menu");
 const Toolbar = require("material-ui/lib/toolbar/toolbar");
 const ToolbarGroup = require("material-ui/lib/toolbar/toolbar-group");
 const IconButton = require("material-ui/lib/icon-button");
 const TextField = require("material-ui/lib/text-field");
-const DropDownMenu = require("material-ui/lib/drop-down-menu");
 
 const History = require("../inc/History");
 const Pure = require("../inc/Pure");
@@ -26,6 +26,7 @@ const Directory = require("../../inc/Directory");
 const Spinner = require ("./Spinner");
 const Context = require("./Context");
 const Menu = require("./Menu");
+const Add = require("./Add");
 
 class Search extends Pure {
 
@@ -44,6 +45,10 @@ class Search extends Pure {
             offset: -(this.props.size || 25),
             size: this.props.size || 25
         };
+
+        this.loadOneMorePage = this.loadOneMorePage.bind(this);
+        this.onRowClick = this.onRowClick.bind(this);
+
     }
 
     componentWillReceiveProps(nextProps) {
@@ -115,29 +120,20 @@ class Search extends Pure {
     toolbar() {
         if (this.props.toolbar) {
             let iconButtonElement = <IconButton style={{verticalAlign: "middle"}} iconClassName="material-icons" tooltipPosition="bottom-center" tooltip="Preset">filter_list</IconButton>;
-            let menuItems = [
-               { payload: "1", text: "Issue" },
-               { payload: "2", text: "Comment" },
-               { payload: "3", text: "Picture" },
-               { payload: "4", text: "Idea" },
-               { payload: "5", text: "Question" }
-            ];
 
             return (
-                <Toolbar>
-                    <ToolbarGroup key={0} float="left">
-                        <IconMenu openDirection="bottom-right" iconButtonElement={iconButtonElement}>
-                            <Item primaryText="All projects" />
-                            <Item primaryText="Issues for team xxx" />
-                            <Item primaryText="Urgent issues" />
-                        </IconMenu>
-                        <TextField ref="filter" onEnterKeyDown={this.onFilter} hintText="Filter" style={{}}/>
-                    </ToolbarGroup>
-                    <ToolbarGroup key={1} float="right">
-                        <FontIcon className="material-icons">add</FontIcon>
-                        <DropDownMenu menuItems={menuItems}/>
-                    </ToolbarGroup>
-                </Toolbar>
+                <ListItem disabled style={{padding: "0px"}} rightIconButton={<Add/>}>
+                    <Toolbar>
+                        <ToolbarGroup>
+                            <IconMenu openDirection="bottom-right" iconButtonElement={iconButtonElement}>
+                                <Item primaryText="All projects" />
+                                <Item primaryText="Issues for team xxx" />
+                                <Item primaryText="Urgent issues" />
+                            </IconMenu>
+                            <TextField ref="filter" onEnterKeyDown={this.onFilter} hintText="Filter" style={{}}/>
+                        </ToolbarGroup>
+                    </Toolbar>
+                </ListItem>
             );
         } else {
             return false;
@@ -184,7 +180,7 @@ class Search extends Pure {
             return (
                 <div>
                     <Spinner/>
-                    {this.state.query && <Waypoint onEnter={this.loadOneMorePage.bind(this)}/>}
+                    {this.state.query && <Waypoint onEnter={this.loadOneMorePage}/>}
                 </div>
             );
         } else {
@@ -194,7 +190,7 @@ class Search extends Pure {
                 rows.push(
                     <ListItem key={item.ref}
                         disabled={Directory.hasPanel(item.constructor.name)}
-                        onTouchTap={this.onRowClick.bind(this, item)}
+                        onTouchTap={this.onRowClick}
                         rightIconButton={<Menu/>}
                         leftIcon={<Loader ui={Directory.icon(item.constructor.name)} model={item.ref}/>}
                         primaryText={<Loader ui={Directory.inline(item.constructor.name)} model={item.ref}/>}
@@ -233,18 +229,18 @@ class Search extends Pure {
                                 {rows.slice(10, -1)}
                             </List>
                         </Paper>
-                        {!this.state.loading ? <Waypoint onEnter={this.loadOneMorePage.bind(this)}/> : false}
+                        {!this.state.loading ? <Waypoint onEnter={this.loadOneMorePage}/> : false}
                     </div>
                 );
             } else {
                 return (
                     <Paper style={{marginTop: "1em"}}>
-                        {this.toolbar()}
                         {this.chart()}
                         <List style={{paddingTop: "0px", paddingBottom: "0px"}}>
+                            {this.toolbar()}
                             {rows}
                         </List>
-                        {!this.state.loading ? <Waypoint onEnter={this.loadOneMorePage.bind(this)}/> : false}
+                        {!this.state.loading ? <Waypoint onEnter={this.loadOneMorePage}/> : false}
                     </Paper>
                 );
             }

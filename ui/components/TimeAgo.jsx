@@ -1,3 +1,5 @@
+"use strict";
+
 const React = require("react");
 const Moment = require("moment");
 const ImmutabilityHelper = require("material-ui/lib/utils/immutability-helper");
@@ -12,6 +14,8 @@ class TimeAgo extends Pure {
         this.state = {
             tooltipShown: false
         };
+        this.showTooltip = this.showTooltip.bind(this);
+        this.hideTooltip = this.hideTooltip.bind(this);
     }
 
     showTooltip() {

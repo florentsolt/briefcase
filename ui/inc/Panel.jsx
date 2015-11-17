@@ -21,9 +21,11 @@ class Panel extends Pure {
             <Paper style={{marginTop: "1em"}}>
                 <List style={{paddingTop: "0px"}}>
                     <ListItem disabled style={{padding: "0px"}} rightIconButton={<Menu/>}>
-                        <Toolbar><ToolbarGroup>
-                            <ToolbarTitle text={this.props.model.ref + " — " + this.props.model.title}/>
-                        </ToolbarGroup></Toolbar>
+                        <Toolbar>
+                            <ToolbarGroup>
+                                <ToolbarTitle text={this.props.model.ref + " — " + this.props.model.title}/>
+                            </ToolbarGroup>
+                        </Toolbar>
                     </ListItem>
                     <ListItem disabled style={{padding: "0px"}}>
                         <Context date derivators parents followers style={{fontSize: "20px", lineHeight: "56px", paddingLeft: "1em"}} model={this.props.model}/>

@@ -1,3 +1,5 @@
+"use strict";
+
 const React = require("react");
 
 const AppBar = require("material-ui/lib/app-bar");
@@ -12,6 +14,11 @@ const History = require("../inc/History");
 const Pure = require("../inc/Pure");
 
 class Nav extends Pure {
+
+    constructor() {
+        super();
+        this.onEnterKeyDown = this.onEnterKeyDown.bind(this);
+    }
 
     onEnterKeyDown() {
         History.pushState(undefined, `/search/${encodeURIComponent(this.refs.query.getValue().trim())}`, undefined);

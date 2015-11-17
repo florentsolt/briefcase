@@ -1,3 +1,5 @@
+"use strict";
+
 const React = require("react");
 const Pure = require("../../ui/inc/Pure");
 

@@ -1,7 +1,6 @@
 "use strict";
 
 const React = require("react");
-const textile = require("textile-js");
 
 const Pure = require("../../ui/inc/Pure");
 const Panel = require("../../ui/inc/Panel");

@@ -13,7 +13,7 @@ exports.panel = function(name) {
 };
 
 exports.hasPanel = function(name) {
-    exports.panel(name) !== false;
+    !!exports.panel(name);
 };
 
 exports.inline = function(name) {

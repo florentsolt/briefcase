@@ -1,3 +1,5 @@
+"use strict";
+
 const d3 = require("d3");
 const React = require("react");
 const ReactDOM = require("react-dom");
@@ -16,18 +18,16 @@ class Chart extends Pure {
     }
 
     componentDidMount() {
-        var el = ReactDOM.findDOMNode(this);
-        this.setState({
-            width: el.offsetWidth - this.state.margin.left - this.state.margin.right,
-            height: el.offsetHeight - this.state.margin.top - this.state.margin.bottom
-        });
         this.componentWillReceiveProps(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
+        var el = ReactDOM.findDOMNode(this);
         var parse = d3.time.format("%Y-%m-%d").parse;
 
         this.setState({
+            width: el.offsetWidth - this.state.margin.left - this.state.margin.right,
+            height: el.offsetHeight - this.state.margin.top - this.state.margin.bottom,
             data: nextProps.data.map((d) => {
                 return {
                     date: parse(d.key_as_string),
