@@ -40,7 +40,10 @@ const counters = {
 Es.flush().then(() => {
     return Redis.flushdb();
 }).then(() => {
-    return User.create("admin", {
+    return User.create({
+        id: "admin",
+        createdAt: faker.date.past()
+    }, {
         password: "admin",
         fullname: "Administrator",
         email: "admin@example.com"
@@ -50,7 +53,10 @@ Es.flush().then(() => {
     let projects = [];
 
     for (let i = 0; i < counters.projects; i++) {
-        promises.push(Project.create(`project-${i + 1}`, {
+        promises.push(Project.create({
+            id: `project-${i + 1}`,
+            createdAt: faker.date.past()
+        }, {
             name: `Project ${i + 1}`,
             description: faker.lorem.sentences(3)
         }).then((project) => {
@@ -68,6 +74,8 @@ Es.flush().then(() => {
     // Issue
     for (let i = 0; i < counters.issues; i++) {
         promises.push(Issue.create({
+            createdAt: faker.date.past()
+        },{
             subject: faker.lorem.sentence(),
             description: faker.lorem.sentences(10),
             status: faker.random.arrayElement(["Open", "Specs", "Code", "Review", "QA", "Release"]),
@@ -88,6 +96,8 @@ Es.flush().then(() => {
     // Comment
     for (let i = 0; i < counters.comments; i++) {
         promises.push(Comment.create({
+            createdAt: faker.date.past()
+        },{
             text: faker.lorem.sentences(faker.random.number(5) + 1)
         }).then((model) => {
             return model.addDerivator(args.user);
@@ -97,6 +107,8 @@ Es.flush().then(() => {
     // Question
     for (let i = 0; i < counters.questions; i++) {
         promises.push(Question.create({
+            createdAt: faker.date.past()
+        },{
             text: faker.lorem.sentence().replace(/\.$/, " ?")
         }).then((model) => {
             return model.addDerivator(args.user);
@@ -106,6 +118,8 @@ Es.flush().then(() => {
     // Wiki
     for (let i = 0; i < counters.wikis; i++) {
         promises.push(Wiki.create({
+            createdAt: faker.date.past()
+        },{
             title: faker.lorem.sentence(),
             content: faker.lorem.sentences(10)
         }).then((model) => {
@@ -116,6 +130,8 @@ Es.flush().then(() => {
     // Idea
     for (let i = 0; i < counters.ideas; i++) {
         promises.push(Idea.create({
+            createdAt: faker.date.past()
+        },{
             text: faker.lorem.sentence()
         }).then((model) => {
             return model.addDerivator(args.user);
@@ -125,6 +141,8 @@ Es.flush().then(() => {
     // Poll
     for (let i = 0; i < counters.polls; i++) {
         promises.push(Poll.create({
+            createdAt: faker.date.past()
+        },{
             title: faker.lorem.sentence(),
             choices: [faker.lorem.sentences(5).split("\n")]
         }).then((model) => {
@@ -135,6 +153,8 @@ Es.flush().then(() => {
     // Mail
     for (let i = 0; i < counters.mails; i++) {
         promises.push(Mail.create({
+            createdAt: faker.date.past()
+        },{
             from: faker.name.findName(),
             to: faker.name.findName(),
             subject: faker.lorem.sentence(),
@@ -147,6 +167,8 @@ Es.flush().then(() => {
     // File
     for (let i = 0; i < counters.files; i++) {
         promises.push(File.create({
+            createdAt: faker.date.past()
+        }, {
             name: faker.lorem.words(3).join("-") + "." + faker.random.arrayElement(["zip", "txt", "csv", "xls", "pdf", "doc"]),
             size: faker.random.number()
         }).then((model) => {
@@ -157,6 +179,8 @@ Es.flush().then(() => {
     // Image
     for (let i = 0; i < counters.images; i++) {
         promises.push(Image.create({
+            createdAt: faker.date.past()
+        },{
             name: faker.lorem.words(3).join("-") + "." + faker.random.arrayElement(["jpg", "png", "gif"]),
             size: faker.random.number(),
             width: faker.random.number(),
@@ -169,6 +193,8 @@ Es.flush().then(() => {
     // Url
     for (let i = 0; i < counters.urls; i++) {
         promises.push(Url.create({
+            createdAt: faker.date.past()
+        },{
             title: faker.lorem.sentence(),
             url: faker.internet.url()
         }).then((model) => {
@@ -179,6 +205,8 @@ Es.flush().then(() => {
     // Commit
     for (let i = 0; i < counters.commits; i++) {
         promises.push(Commit.create({
+            createdAt: faker.date.past()
+        },{
             message: faker.lorem.sentence()
         }).then((model) => {
             return model.addDerivator(args.user);

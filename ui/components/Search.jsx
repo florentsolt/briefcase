@@ -208,8 +208,10 @@ class Search extends Pure {
             if (this.props.inbox) {
                 return (
                     <div>
-                        {this.toolbar()}
-                        {this.chart()}
+                        <Paper>
+                            {this.toolbar()}
+                            {this.chart()}
+                        </Paper>
 
                         <h4>Today</h4>
                         <Paper>

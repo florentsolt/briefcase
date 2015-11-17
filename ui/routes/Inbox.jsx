@@ -36,7 +36,7 @@ module.exports = React.createClass({
     render: function() {
         return (
             <div>
-                <Search toolbar inbox derivators parents query={this.query()} sort="createdAt:desc"/>
+                <Search toolbar chart inbox derivators parents query={this.query()} sort="createdAt:desc"/>
             </div>
         );
     }
