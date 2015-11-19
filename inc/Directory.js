@@ -32,6 +32,14 @@ exports.icon = function(name) {
     }
 };
 
+exports.form = function(name) {
+    try {
+        return require("../models/" + name + "/Form");
+    } catch(e) {
+        return false;
+    }
+};
+
 exports.names = function() {
     if (!process.env.__BROWSER) {
         const fs = require("fs");

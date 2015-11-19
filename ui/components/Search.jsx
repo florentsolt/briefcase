@@ -25,7 +25,7 @@ const Directory = require("../../inc/Directory");
 
 const Spinner = require ("./Spinner");
 const Context = require("./Context");
-const Menu = require("./Menu");
+const Actions = require("./Actions");
 const Add = require("./Add");
 
 class Search extends Pure {
@@ -120,7 +120,7 @@ class Search extends Pure {
             let iconButtonElement = <IconButton style={{verticalAlign: "middle"}} iconClassName="material-icons" tooltipPosition="bottom-center" tooltip="Preset">filter_list</IconButton>;
 
             return (
-                <ListItem disabled style={{padding: "0px"}} rightIconButton={<Add/>}>
+                <ListItem disabled style={{padding: "0px"}} rightIconButton={<Add model={this.props.model}/>}>
                     <Toolbar>
                         <ToolbarGroup>
                             <IconMenu openDirection="bottom-right" iconButtonElement={iconButtonElement}>
@@ -193,7 +193,7 @@ class Search extends Pure {
                         onTouchTap={this.onRowClick}
                         model={item}
                         parent={this}
-                        rightIconButton={<Menu/>}
+                        rightIconButton={<Actions model={item}/>}
                         leftIcon={<Loader ui={Directory.icon(item.constructor.name)} model={item.ref}/>}
                         primaryText={<Loader ui={Directory.inline(item.constructor.name)} model={item.ref}/>}
                         secondaryText={<Context followers={this.props.followers} derivators={this.props.derivators} parents={this.props.parents} date={this.props.date} model={item}/>}æ/>
@@ -208,8 +208,11 @@ class Search extends Pure {
             if (this.props.inbox) {
                 return (
                     <div>
-                        <Paper>
+                        <Paper style={{marginBottom: "1em"}}>
                             {this.toolbar()}
+                        </Paper>
+
+                        <Paper>
                             {this.chart()}
                         </Paper>
 
@@ -238,14 +241,19 @@ class Search extends Pure {
                 );
             } else {
                 return (
-                    <Paper style={{marginTop: "1em"}}>
-                        {this.chart()}
-                        <List style={{paddingTop: "0px", paddingBottom: "0px"}}>
-                            {this.toolbar()}
-                            {rows}
-                        </List>
-                        {!this.state.loading ? <Waypoint onEnter={this.loadOneMorePage}/> : false}
-                    </Paper>
+                    <div>
+                        <Paper style={{marginBottom: "1em"}}>
+                            {this.chart()}
+                        </Paper>
+
+                        <Paper style={{marginTop: "1em"}}>
+                            <List style={{paddingTop: "0px", paddingBottom: "0px"}}>
+                                {this.toolbar()}
+                                {rows}
+                            </List>
+                            {!this.state.loading ? <Waypoint onEnter={this.loadOneMorePage}/> : false}
+                        </Paper>
+                    </div>
                 );
             }
         }

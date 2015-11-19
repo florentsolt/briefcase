@@ -20,6 +20,7 @@ const Inbox = require("./routes/Inbox");
 const Browse = require("./routes/Browse");
 const Search = require("./routes/Search");
 const Model = require("./routes/Model");
+const Form = require("./routes/Form");
 
 const User = require("../models/User/Model");
 
@@ -33,6 +34,8 @@ ReactDOM.render((
             <Route path="inbox/:page" component={Inbox}/>
             <Route path="search/:query/:sort" component={Search}/>
             <Route path="search/:query" component={Search}/>
+            <Route path=":class/:id/add/:add" component={Form}/>
+            <Route path=":class/:id/edit" component={Form}/>
             <Route path=":class/:id" component={Model}/>
         </Route>
     </Router>

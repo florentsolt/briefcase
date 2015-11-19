@@ -31,6 +31,34 @@ class Storage extends events.EventEmitter {
         }
     }
 
+    add(model) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                type: "POST",
+                url: `/api/${model.constructor.name}`,
+                data: model.encode(),
+                contentType: "application/json",
+                error: reject,
+                success: (response) => {
+                    let newModel = Model.decode(response);
+                    cache.set(newModel.ref, newModel);
+                    resolve(newModel);
+                }
+            });
+        });
+    }
+
+    delete(ref) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                type: "POST",
+                url: `/api/${refToPath(ref)}/delete`,
+                error: reject,
+                success: resolve
+            });
+        });
+    }
+
     search(query, sort, offset, size) {
         query = encodeURIComponent(query);
         sort = encodeURIComponent(sort || "");

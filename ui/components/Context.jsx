@@ -7,9 +7,9 @@ const FontIcon = require("material-ui/lib/font-icon");
 const ImmutabilityHelper = require("material-ui/lib/utils/immutability-helper");
 
 const Pure = require("../inc/Pure");
-const Directory = require("../../inc/Directory");
 const Storage = require("../Storage");
 const TimeAgo = require("./TimeAgo");
+const Ref = require("./Ref");
 
 class Context extends Pure {
 
@@ -55,13 +55,7 @@ class Context extends Pure {
     }
 
     renderModel(model) {
-        var Icon = Directory.icon(model.constructor.name);
-
-        return (
-            <span style={this.state.style} key={model.ref}>
-                <Icon model={model} style={ImmutabilityHelper.merge(this.state.style, {marginRight: "0px"})}/> {model.title}
-            </span>
-        );
+        return <Ref key={model.ref} style={{marginRight: "1em"}} model={model}/>;
     }
 
     derivators() {

@@ -29,6 +29,7 @@ class Loader extends Pure {
 
     render() {
         let Component = this.props.ui;
+
         if (!this.props.ui) {
             return false;
         } else if (this.state.model === false) {

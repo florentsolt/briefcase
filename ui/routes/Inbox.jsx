@@ -2,23 +2,24 @@
 
 const React = require("react");
 const Search = require("../components/Search");
+const Pure = require("../inc/Pure");
 
-module.exports = React.createClass({
-    displayName: "InboxRoute",
+class InboxRoute extends Pure {
 
-    getInitialState: function() {
-        return {
-            page: this.props.params.page || "inbox"
+    constructor(props) {
+        super(props);
+        this.state = {
+            page: props.params.page || "inbox"
         };
-    },
+    }
 
-    componentWillReceiveProps: function(nextProps) {
+    componentWillReceiveProps(nextProps) {
         this.setState({
             page: nextProps.params.page
         });
-    },
+    }
 
-    query: function() {
+    query() {
         switch (this.state.page) {
         case "following":
             return "followeesOf:" + window.Me.ref;
@@ -31,13 +32,15 @@ module.exports = React.createClass({
         default:
             return "childrenOf:" + window.Me.ref;
         }
-    },
+    }
 
-    render: function() {
+    render() {
         return (
             <div>
-                <Search toolbar chart inbox derivators parents query={this.query()} sort="createdAt:desc"/>
+                <Search toolbar chart inbox derivators parents query={this.query()} sort="createdAt:desc" model={window.Me}/>
             </div>
         );
     }
-});
+}
+
+module.exports = InboxRoute;

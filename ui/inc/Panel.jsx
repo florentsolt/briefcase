@@ -12,7 +12,7 @@ const ToolbarGroup = require("material-ui/lib/toolbar/toolbar-group");
 const ToolbarTitle = require("material-ui/lib/toolbar/toolbar-title");
 
 const Context = require("../components/Context");
-const Menu = require("../components/Menu");
+const Actions = require("../components/Actions");
 
 class Panel extends Pure {
 
@@ -20,7 +20,7 @@ class Panel extends Pure {
         return (
             <Paper style={{marginTop: "1em"}}>
                 <List style={{paddingTop: "0px"}}>
-                    <ListItem disabled style={{padding: "0px"}} rightIconButton={<Menu/>}>
+                    <ListItem disabled style={{padding: "0px"}} rightIconButton={<Actions model={this.props.model}/>}>
                         <Toolbar>
                             <ToolbarGroup>
                                 <ToolbarTitle text={this.props.model.ref + " — " + this.props.model.title}/>
@@ -28,7 +28,7 @@ class Panel extends Pure {
                         </Toolbar>
                     </ListItem>
                     <ListItem disabled style={{padding: "0px"}}>
-                        <Context date derivators parents followers style={{fontSize: "20px", lineHeight: "56px", paddingLeft: "1em"}} model={this.props.model}/>
+                        <Context date derivators parents followers style={{fontSize: "20px", lineHeight: "56px", paddingLeft: "24px"}} model={this.props.model}/>
                     </ListItem>
                     <ListDivider style={{width: "100%"}}/>
                     <ListItem disabled>
