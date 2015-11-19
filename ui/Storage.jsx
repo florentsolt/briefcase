@@ -6,6 +6,7 @@ const Model = require("../inc/Model");
 let cache = new Map();
 
 var refToPath= function(ref) {
+    // Todo support when ref is a Model and not a string
     return ref.replace("#", "/");
 };
 
