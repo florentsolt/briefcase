@@ -20,6 +20,7 @@ class SerializableModel extends IsomorphicModel {
         if (typeof data === "string") {
             data = JSON.parse(data);
         }
+
         let klass = Directory.model(data._);
         if (klass !== undefined) {
             return new klass(data.m, data.d);
