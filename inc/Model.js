@@ -120,28 +120,11 @@ if (process.env.__BROWSER) {
         }
 
         delete() {
-            //FIXME remove this ref from ES and lists
-            return Redis.hdel(this.constructor.name, this.id).then((count) => {
-                if (parseInt(count, 10) === 1) {
-                    let promises = [];
-                    // Remove from the list
-                    promises.push(Redis.lrem(this.constructor.key("all"), 1, this.id));
-
-                    // Remove from indexes
-                    for (let index in this.constructor.indexes) {
-                        let data = this.at(index.path);
-                        if (data !== undefined) {
-                            let key = this.constructor._indexKey(data, index);
-                            if (index.uniqueness === true) {
-                                promises.push(Redis.hdel(key[0], key[1]));
-                            } else {
-                                promises.push(Redis.rem(key, this.id));
-                            }
-                        }
-                    }
-                    return Promise.all(promises);
-                }
-            });
+            return super.delete()
+                .then(() => Redis.hdel(this.constructor.name, this.id))
+                .then(() => Redis.lrem(this.constructor.key("all"), 1, this.id))
+                .then(() => Es.delete(this))
+                .then(() => this);
         }
 
         // Private
@@ -189,7 +172,7 @@ if (process.env.__BROWSER) {
             return Redis.hset(this.constructor.name, this.id, this.encode()).then(() => {
                 return this._fillList();
             }).then(() => {
-                return update ? Es.update(this) : Es.create(this);
+                return update ? Es.update(this) : Es.add(this);
             }).then(() => {
                 return this;
             });

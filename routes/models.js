@@ -5,6 +5,7 @@ var router = express.Router();
 var Directory = require("../inc/Directory");
 var Logger = require("../inc/Logger");
 var Es = require("../elasticsearch/client");
+var Model = require("../inc/Model");
 
 var toJson = function(res, object) {
     res.set("Content-Type", "application/json");
@@ -55,8 +56,18 @@ router.get("/search/:query", (req, res) => {
     search(res, req);
 });
 
+router.post("/:klass/:id/delete", (req, res) => {
+    Directory.model(req.params.klass)
+        .find(req.params.id)
+        .then((model) => model.delete())
+        .then(() => {
+            res.status(200).end();
+        });
+});
+
 router.get("/:klass/:id", (req, res) => {
-    Directory.model(req.params.klass).find(req.params.id)
+    Directory.model(req.params.klass)
+        .find(req.params.id)
         .then((model) => model.includeRelations())
         .then((model) => {
             res.type("json");
@@ -69,9 +80,9 @@ router.get("/:klass/:id", (req, res) => {
 });
 
 router.post("/:klass", (req, res) => {
-    Directory.model(req.params.klass).create(req.body).then((model) => {
-        res.location("/" + req.params.klass + "/" + model.id);
-        return toJson(res, model.encode(true));
+    Model.decode(req.body).save().then((newModel) => {
+        res.location("/" + req.params.klass + "/" + newModel.id);
+        return toJson(res, newModel.encode(true));
     });
 });
 

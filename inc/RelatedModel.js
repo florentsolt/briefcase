@@ -11,6 +11,16 @@ var keys = {
     derivators: "dor"
 };
 
+// Used during deletions
+var reverse = {
+    parents: "children",
+    children: "parents",
+    followees: "followers",
+    followers: "followees",
+    derivatives: "derivators",
+    derivators: "derivatives"
+};
+
 if (process.env.__BROWSER) {
     class RelatedModel extends SerializableModel {
 
@@ -42,10 +52,34 @@ if (process.env.__BROWSER) {
 
     class RelatedModel extends SerializableModel {
 
+        delete() {
+            var promises = Object.keys(keys).map((key) => {
+                return this._refList(key)
+                    .map((ref) => {
+                        let rev = keys[reverse[key]];
+                        // First, remove the model from others model relations in Redis
+                        Logger.redis(`zdel ${ref}.${rev} ${this.ref}`);
+                        return Redis.zrem(ref + "." + rev, this.ref)
+                            .then(() => ref);
+                    }).map((ref) => {
+                        // Then, remove the relations from the index
+                        return this.constructor._resolveRef(ref).then((relation) => {
+                            Es.removeRelation(relation, reverse[key], this.ref);
+                        });
+                    }).then(() => {
+                        // Finally, delete the list of relations
+                        Logger.redis(`del ${this.constructor.key(this.id, keys[key])}`);
+                        return Redis.del(this.constructor.key(this.id, keys[key]));
+                    });
+            });
+
+            return Promise.all(promises).then(() => this);
+        }
+
         // Parents
 
         addParent(parent) {
-            return this._push("parents", "children", parent);
+            return this._push("parents", parent);
         }
 
         parents(scores) {
@@ -59,7 +93,7 @@ if (process.env.__BROWSER) {
         // Children
 
         addChild(child) {
-            return this._push("children", "parents", child);
+            return this._push("children", child);
         }
 
         children(scores) {
@@ -69,7 +103,7 @@ if (process.env.__BROWSER) {
         // Followees
 
         addFollowee(followee) {
-            return this._push("followees", "followers", followee);
+            return this._push("followees", followee);
         }
 
         followees(scores) {
@@ -79,7 +113,7 @@ if (process.env.__BROWSER) {
         // Followers
 
         addFollower(follower) {
-            return this._push("followers", "followees", follower);
+            return this._push("followers", follower);
         }
 
         followers(scores) {
@@ -89,7 +123,7 @@ if (process.env.__BROWSER) {
         // Derivatives
 
         addDerivative(derivative) {
-            return this._push("derivatives", "derivators", derivative);
+            return this._push("derivatives", derivative);
         }
 
         derivatives(scores) {
@@ -99,7 +133,7 @@ if (process.env.__BROWSER) {
         // Derivators
 
         addDerivator(derivator) {
-            return this._push("derivators", "derivatives", derivator);
+            return this._push("derivators", derivator);
         }
 
         derivators(scores) {
@@ -184,7 +218,9 @@ if (process.env.__BROWSER) {
             return this._grandListRecurse(this.ref, key);
         }
 
-        _push(key1, key2, modelOrRef) {
+        _push(key1, modelOrRef) {
+            let key2 = reverse[key1];
+
             let ts = new Date().getTime();
             if (modelOrRef instanceof RelatedModel) {
                 let model = modelOrRef;
@@ -193,10 +229,7 @@ if (process.env.__BROWSER) {
                     Redis.zadd(model.constructor.key(model.id, keys[key2]), "nx", ts, this.ref)
                 ]).then(() => {
                     Es.addRelation(this, key1, model.ref);
-                    Es.addRelation(this, key1, model.ref.split("#", 2)[0]);
-
                     Es.addRelation(model, key2, this.ref);
-                    Es.addRelation(model, key2, this.ref.split("#", 2)[0]);
                 }).then(() => {
                     return this;
                 });

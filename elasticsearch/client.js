@@ -24,6 +24,15 @@ var filter = function(query) {
 
 var bulk = [];
 
+var relations = {
+    children: "_parentsOf",
+    parents: "_childrenOf",
+    followees: "_followersOf",
+    followers: "_followeesOf",
+    derivatives: "_deriveTo",
+    derivators: "_deriveFrom"
+};
+
 module.exports = {
     flush: function() {
         return client.indices.delete({index: index}).catch(() => {
@@ -39,34 +48,19 @@ module.exports = {
 
     addRelation: function(model, name, ref) {
         // Logger.debug(`Indexing new "${name}" relation ${model.ref} -> ${ref}...`);
-
-        var doc = {};
-        switch (name) {
-        case "children":
-            doc.script = "if (!ctx._source._parentsOf.contains(relation)) { ctx._source._parentsOf+=relation }";
-            break;
-        case "parents":
-            doc.script = "if (!ctx._source._childrenOf.contains(relation)) { ctx._source._childrenOf+=relation }";
-            break;
-        case "followees":
-            doc.script = "if (!ctx._source._followersOf.contains(relation)) { ctx._source._followersOf+=relation }";
-            break;
-        case "followers":
-            doc.script = "if (!ctx._source._followeesOf.contains(relation)) { ctx._source._followeesOf+=relation }";
-            break;
-        case "derivatives":
-            doc.script = "if (!ctx._source._deriveTo.contains(relation)) { ctx._source._deriveTo+=relation }";
-            break;
-        case "derivators":
-            doc.script = "if (!ctx._source._deriveFrom.contains(relation)) { ctx._source._deriveFrom+=relation }";
-            break;
-        }
-        if (!doc.script) return;
-        doc.params = { relation: ref };
-
+        let script = "if (!ctx._source.%PROP%.contains(relation)) { ctx._source.%PROP% += relation }";
         bulk.push(
             { update: { _type: model.constructor.name, _id: model.id } },
-            doc
+            { params: { relation: ref }, script: script.replace(/%PROP%/g, relations[name]) }
+        );
+    },
+
+    removeRelation: function(model, name, ref) {
+        Logger.debug(`Indexing "${name}" relation removal ${model.ref} -> ${ref}...`);
+        let script = "ctx._source.%PROP% -= relation";
+        bulk.push(
+            { update: { _type: model.constructor.name, _id: model.id } },
+            { params: { relation: ref }, script: script.replace(/%PROP%/g, relations[name]) }
         );
     },
 
@@ -104,7 +98,7 @@ module.exports = {
         }
     },
 
-    create: function(model) {
+    add: function(model) {
         var data = {
             _createdAt: model.meta.c,
             _updatedAt: model.meta.u,
@@ -124,6 +118,14 @@ module.exports = {
             type: model.constructor.name,
             id: model.id,
             body: extend(data, model.data)
+        });
+    },
+
+    delete: function(model) {
+        return client.delete({
+            index: index,
+            type: model.constructor.name,
+            id: model.id
         });
     },
 
@@ -214,12 +216,16 @@ module.exports = {
                 return Promise
                     .map(refs, (ref) => Model._resolveRef(ref))
                     .each((model) => models.push(model))
-                    .then(() => models);
+                    .then(() => [existingRefs, models]);
 
-            }).then((models) => {
+            }).spread((allRefs, models) => {
+
+                let refs = response.hits.hits.map((hit) => hit._type + "#" + hit._id)
+                    .filter((ref) => allRefs.indexOf(ref) !== -1); // skip refs that can't be prefetched, ie. not found
+
                 return {
                     total: response.hits.total,
-                    refs: response.hits.hits.map((hit) => hit._type + "#" + hit._id), // models,
+                    refs: refs,
                     prefetch: models,
                     offset: offset,
                     size: size,
