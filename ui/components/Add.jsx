@@ -23,15 +23,17 @@ class Add extends Pure {
     render() {
         let icon = <IconButton iconClassName="material-icons" tooltipPosition="bottom-center" tooltip="Add">add</IconButton>;
 
+        let items = this.props.model.constructor.allowedChildren.map((klass) => {
+            return <Item key={klass} primaryText={klass}/>;
+        });
+
+        if (items.length === 0) return false;
+
         return(
           <IconMenu style={this.props.style} openDirection="bottom-left" iconButtonElement={icon} onItemTouchTap={this.onItemTouchTap}>
-              <Item primaryText="Issue"/>
-              <Item primaryText="Comment" />
-              <Item primaryText="Picture" />
-              <Item primaryText="Idea" />
-              <Item primaryText="Question" />
+            {items}
           </IconMenu>
-          );
+        );
     }
 }
 
