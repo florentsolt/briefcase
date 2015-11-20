@@ -80,6 +80,11 @@ class IsomorphicModel {
     hash() {
         return this.constructor.hash([this.meta, this.data]);
     }
+
+    static get allowedChildren() {
+        return [];
+    }
+
 }
 
 module.exports = IsomorphicModel;
