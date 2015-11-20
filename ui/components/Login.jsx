@@ -5,6 +5,7 @@ const React = require("react");
 const Paper = require("material-ui/lib/paper");
 const TextField = require("material-ui/lib/text-field");
 const FontIcon = require("material-ui/lib/font-icon");
+const RaisedButton = require("material-ui/lib/raised-button");
 
 const Pure = require("../inc/Pure");
 
@@ -39,6 +40,10 @@ class Login extends Pure {
                         <TextField hintText="Username" name="username" style={{width: "100%"}} onEnterKeyDown={this.onEnterKeyDown}/>
                         <TextField hintText="Password" name="password" style={{width: "100%"}} type="password" onEnterKeyDown={this.onEnterKeyDown}/>
                     </form>
+
+                    <div style={{marginTop: "1em", textAlign: "right"}}>
+                        <RaisedButton label="Login" primary onTouchTap={this.onEnterKeyDown}/>
+                    </div>
                 </Paper>
         );
     }
