@@ -62,7 +62,7 @@ class Form extends Pure {
                 </ListItem>
                 <div style={{padding: "1em"}}>
                     {this.props.children}
-                    <div style={{textAlign: "right"}}>
+                    <div style={{textAlign: "right", marginTop: "1em"}}>
                         <Button label="Back" secondary onTouchTap={this.onBack}/>
                         <Button label="Submit" primary onTouchTap={this.onSubmit}/>
                     </div>
