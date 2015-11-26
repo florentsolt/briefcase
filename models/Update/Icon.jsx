@@ -7,7 +7,7 @@ const Pure = require("../../ui/inc/Pure");
 class UpdateIcon extends Pure {
 
     render() {
-        return (<FontIcon style={this.props.style} className="material-icons">trending_up</FontIcon>);
+        return (<FontIcon style={this.props.style} className="material-icons">update</FontIcon>);
     }
 
 }
