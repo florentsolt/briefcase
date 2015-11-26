@@ -2,16 +2,12 @@
 
 const React = require("react");
 const Pure = require("../../ui/inc/Pure");
-
-const style = {
-    maxWidth: "150px",
-    maxHeight: "150px"
-};
+const Theme = require("../../ui/inc/Theme");
 
 class ImageInline extends Pure {
 
     render() {
-        return <img style={style} src="http://placehold.it/450x350"/>;
+        return <img style={Theme.model.image.inline} src="http://placehold.it/450x350"/>;
     }
 
 }

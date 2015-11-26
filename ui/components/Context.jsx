@@ -4,33 +4,24 @@ const React = require("react");
 const Promise = require("bluebird");
 
 const FontIcon = require("material-ui/lib/font-icon");
-const ImmutabilityHelper = require("material-ui/lib/utils/immutability-helper");
 
 const Pure = require("../inc/Pure");
+const Theme = require("../inc/Theme");
 const Storage = require("../Storage");
 const TimeAgo = require("./TimeAgo");
 const Ref = require("./Ref");
+const IconTooltip = require("./IconTooltip");
 
 class Context extends Pure {
 
     constructor(props) {
         super(props);
-        let style = this.props.style || {};
 
         this.state = {
             model: false,
             derivators: false,
             parents: false,
-            followers: false,
-            style: {
-                height: "100%",
-                display: "inline-block",
-                verticalAlign: "bottom",
-                fontSize: style.fontSize || "inherit",
-                lineHeight: style.lineHeight || "inherit",
-                color: style.color || "inherit",
-                marginRight: "1em"
-            }
+            followers: false
         };
     }
 
@@ -55,42 +46,24 @@ class Context extends Pure {
     }
 
     renderModel(model) {
-        return <Ref key={model.ref} style={{marginRight: "1em"}} model={model}/>;
+        return <Ref key={model.ref} style={Theme.context.ref} model={model}/>;
     }
 
     derivators() {
         if (this.props.derivators && this.state.derivators) {
+            let content;
             if (this.state.derivators.length > 0) {
-                return this.state.derivators.map(this.renderModel.bind(this));
+                content = this.state.derivators.map(this.renderModel.bind(this));
             } else {
-                return <em style={this.state.style}>None</em>;
+                content = <em style={Theme.context.none}>None</em>;
             }
-        } else {
-            return false;
-        }
-    }
 
-    parents() {
-        if (this.props.parents && this.state.parents && this.state.parents.length > 0) {
             return (
-                <span>
-                    {this.props.derivators ? <FontIcon className="material-icons" style={this.state.style}>chevron_right</FontIcon> : false}
-                    {this.state.parents.map(this.renderModel.bind(this))}
-                </span>
-            );
-        } else {
-            return false;
-        }
-    }
-
-    followers() {
-        if (this.props.followers && this.state.followers && this.state.followers.length > 0) {
-            return (
-                <span>
-                    {this.props.derivators || this.props.parents ? <FontIcon className="material-icons" style={this.state.style}>chevron_right</FontIcon> : false}
-                    {this.state.followers.map(this.renderModel.bind(this))}
-                </span>
-            );
+                <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <IconTooltip style={Theme.context.icon} icon="flight_takeoff" tooltip="Derivators" />
+                    <FontIcon className="material-icons" style={Theme.context.icon}>chevron_right</FontIcon>
+                    {content}
+                </div>);
         } else {
             return false;
         }
@@ -99,12 +72,52 @@ class Context extends Pure {
     date() {
         if (this.props.date) {
             return (
-                <span>
-                    {this.props.derivators || this.props.parents || this.props.followers ? <FontIcon className="material-icons" style={this.state.style}>chevron_right</FontIcon> : false}
-                    <FontIcon className="material-icons" style={ImmutabilityHelper.merge(this.state.style, {marginRight: "0px"})}>event_note</FontIcon>
+                <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <IconTooltip style={Theme.context.icon} icon="event_note" tooltip="Created at" />
                     <TimeAgo date={this.state.model.createdAt}/>
-                </span>
+                </div>
             );
+        } else {
+            return false;
+        }
+    }
+
+    parents() {
+        if (this.props.parents && this.state.parents) {
+            let content;
+            if (this.state.parents.length > 0) {
+                content = this.state.parents.map(this.renderModel.bind(this));
+            } else {
+                content = <em style={Theme.context.none}>None</em>;
+            }
+
+            return (
+                <div className="col-xs-12">
+                    <IconTooltip style={Theme.context.icon} icon="inbox" tooltip="Inbox" />
+                    <FontIcon className="material-icons" style={Theme.context.icon}>chevron_right</FontIcon>
+                    {content}
+                </div>);
+        } else {
+            return false;
+        }
+    }
+
+    followers() {
+        if (this.props.followers && this.state.followers) {
+            let content;
+            if (this.state.followers.length > 0) {
+                content = this.state.followers.map(this.renderModel.bind(this));
+            } else {
+                content = <em style={Theme.context.none}>None</em>;
+            }
+
+            return (
+                <div className="col-xs-12">
+                    <IconTooltip style={Theme.context.icon} icon="remove_red_eye" tooltip="Followers" />
+                    <FontIcon className="material-icons" style={Theme.context.icon}>chevron_right</FontIcon>
+                    {content}
+                </div>);
+
         } else {
             return false;
         }
@@ -116,10 +129,16 @@ class Context extends Pure {
         } else {
             return(
                 <div style={this.props.style}>
-                    {this.derivators()}
-                    {this.parents()}
-                    {this.followers()}
-                    {this.date()}
+                    <div className="row">
+                        {this.derivators()}
+                        {this.date()}
+                    </div>
+                    <div className="row">
+                        {this.parents()}
+                    </div>
+                    <div className="row">
+                        {this.followers()}
+                    </div>
                 </div>
             );
         }

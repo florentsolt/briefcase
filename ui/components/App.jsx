@@ -8,6 +8,7 @@ const FontIcon = require("material-ui/lib/font-icon");
 
 const History = require("../inc/History");
 const Pure = require("../inc/Pure");
+const Theme = require("../inc/Theme");
 
 const Login = require ("./Login");
 const Nav = require ("./Nav");
@@ -60,21 +61,20 @@ class App extends Pure {
                     <Nav query={this.props.params.query}/>
                     <div className="row">
                         <div className="col-xs-12 last-xs col-sm-3 col-md-2 col-lg-2">
-                            <List style={{marginTop: "1em", backgroundColor: "transparent"}}>
-                                <ListItem innerDivStyle={{paddingLeft: "56px"}} primaryText="Inbox" leftIcon={<FontIcon className="material-icons">inbox</FontIcon>} onTouchTap={this.goInbox}/>
-                                <ListItem innerDivStyle={{paddingLeft: "56px"}} primaryText="Following" leftIcon={<FontIcon className="material-icons">remove_red_eye</FontIcon>} onTouchTap={this.goFollowing}/>
-                                <ListItem innerDivStyle={{paddingLeft: "56px"}} primaryText="Derivates" leftIcon={<FontIcon className="material-icons">flight_takeoff</FontIcon>} onTouchTap={this.goDerivates}/>
-                                <ListItem innerDivStyle={{paddingLeft: "56px"}} primaryText="Pinned" leftIcon={<FontIcon className="material-icons">pin_drop</FontIcon>} onTouchTap={this.goPinned}/>
-                                <ListItem innerDivStyle={{paddingLeft: "56px"}} primaryText="Snoozed" leftIcon={<FontIcon className="material-icons">access_time</FontIcon>} onTouchTap={this.goSnoozed}/>
+                            <List style={Theme.app.menu}>
+                                <ListItem innerDivStyle={Theme.app.menuItem} primaryText="Inbox" leftIcon={<FontIcon className="material-icons">inbox</FontIcon>} onTouchTap={this.goInbox}/>
+                                <ListItem innerDivStyle={Theme.app.menuItem} primaryText="Following" leftIcon={<FontIcon className="material-icons">remove_red_eye</FontIcon>} onTouchTap={this.goFollowing}/>
+                                <ListItem innerDivStyle={Theme.app.menuItem} primaryText="Derivates" leftIcon={<FontIcon className="material-icons">flight_takeoff</FontIcon>} onTouchTap={this.goDerivates}/>
+                                <ListItem innerDivStyle={Theme.app.menuItem} primaryText="Pinned" leftIcon={<FontIcon className="material-icons">pin_drop</FontIcon>} onTouchTap={this.goPinned}/>
+                                <ListItem innerDivStyle={Theme.app.menuItem} primaryText="Snoozed" leftIcon={<FontIcon className="material-icons">access_time</FontIcon>} onTouchTap={this.goSnoozed}/>
                                 <ListDivider />
-                                <ListItem innerDivStyle={{paddingLeft: "56px"}} primaryText="Browse" leftIcon={<FontIcon className="material-icons">folder</FontIcon>} onTouchTap={this.goBrowse}/>
+                                <ListItem innerDivStyle={Theme.app.menuItem} primaryText="Browse" leftIcon={<FontIcon className="material-icons">folder</FontIcon>} onTouchTap={this.goBrowse}/>
                                 <ListDivider />
-                                <ListItem innerDivStyle={{paddingLeft: "56px"}} primaryText="My account" leftIcon={<FontIcon className="material-icons">face</FontIcon>} onTouchTap={this.goMyAccount}/>
-                                <ListItem innerDivStyle={{paddingLeft: "56px"}} primaryText="Logout" leftIcon={<FontIcon className="material-icons">exit_to_app</FontIcon>} onTouchTap={this.goLogout}/>
-
+                                <ListItem innerDivStyle={Theme.app.menuItem} primaryText="My account" leftIcon={<FontIcon className="material-icons">face</FontIcon>} onTouchTap={this.goMyAccount}/>
+                                <ListItem innerDivStyle={Theme.app.menuItem} primaryText="Logout" leftIcon={<FontIcon className="material-icons">exit_to_app</FontIcon>} onTouchTap={this.goLogout}/>
                             </List>
                         </div>
-                        <div className="col-xs-12 last-sm col-sm-9 col-md-10 col-lg-10" style={{padding: "1em 2em"}}>
+                        <div className="col-xs-12 last-sm col-sm-9 col-md-10 col-lg-10" style={Theme.app.container}>
                             {this.props.children}
                         </div>
                     </div>

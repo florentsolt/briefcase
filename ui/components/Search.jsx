@@ -6,6 +6,7 @@ const Promise = require("bluebird");
 const Paper = require("material-ui/lib/paper");
 const List = require("material-ui/lib/lists/list");
 const ListItem = require("material-ui/lib/lists/list-item");
+const ListDivider = require("material-ui/lib/lists/list-divider");
 const Item = require("material-ui/lib/menus/menu-item");
 const IconMenu = require("material-ui/lib/menus/icon-menu");
 const Toolbar = require("material-ui/lib/toolbar/toolbar");
@@ -15,6 +16,7 @@ const TextField = require("material-ui/lib/text-field");
 
 const History = require("../inc/History");
 const Pure = require("../inc/Pure");
+const Theme = require("../inc/Theme");
 
 const Loader = require("../inc/Loader");
 const Chart = require("./Chart");
@@ -27,6 +29,7 @@ const Spinner = require ("./Spinner");
 const Context = require("./Context");
 const Actions = require("./Actions");
 const Add = require("./Add");
+const Query = require("./Query");
 
 class Search extends Pure {
 
@@ -117,19 +120,10 @@ class Search extends Pure {
 
     toolbar() {
         if (this.props.toolbar) {
-            let iconButtonElement = <IconButton style={{verticalAlign: "middle"}} iconClassName="material-icons" tooltipPosition="bottom-center" tooltip="Preset">filter_list</IconButton>;
-
             return (
-                <ListItem disabled style={{padding: "0px"}} rightIconButton={<Add model={this.props.model}/>}>
+                <ListItem disabled style={Theme.search.filter} rightIconButton={<Add model={this.props.model}/>}>
                     <Toolbar>
-                        <ToolbarGroup>
-                            <IconMenu openDirection="bottom-right" iconButtonElement={iconButtonElement}>
-                                <Item primaryText="All projects" />
-                                <Item primaryText="Issues for team xxx" />
-                                <Item primaryText="Urgent issues" />
-                            </IconMenu>
-                            <TextField ref="filter" onEnterKeyDown={this.onFilter} hintText="Filter" style={{}}/>
-                        </ToolbarGroup>
+                        <Query hintText="Filter"/>
                     </Toolbar>
                 </ListItem>
             );
@@ -165,7 +159,7 @@ class Search extends Pure {
 
         if (this.props.expand && this.state.expand === model.ref) {
             return (
-                <ListItem disabled key={"expand-" + model.ref} style={{marginLeft: "3em"}}>
+                <ListItem disabled key={"expand-" + model.ref} style={Theme.search.expand}>
                     <Self expand date query={"childrenOf:" + model.ref} sort={this.props.sort}/>
                 </ListItem>
             );
@@ -187,6 +181,8 @@ class Search extends Pure {
             let rows = [];
 
             this.state.models.forEach((item) => {
+                if (rows.length > 0) rows.push(<ListDivider key={"divider" + item.ref}/>);
+
                 rows.push(
                     <ListItem key={item.ref}
                         disabled={Directory.hasPanel(item.constructor.name)}
@@ -194,9 +190,11 @@ class Search extends Pure {
                         model={item}
                         parent={this}
                         rightIconButton={<Actions model={item}/>}
-                        leftIcon={<Loader ui={Directory.icon(item.constructor.name)} model={item.ref}/>}
-                        primaryText={<Loader ui={Directory.inline(item.constructor.name)} model={item.ref}/>}
-                        secondaryText={<Context followers={this.props.followers} derivators={this.props.derivators} parents={this.props.parents} date={this.props.date} model={item}/>}æ/>
+                        leftIcon={<Loader style={Theme.search.item.leftIcon} ui={Directory.icon(item.constructor.name)} model={item.ref}/>}>
+
+                        {<Loader style={Theme.search.item.inline} ui={Directory.inline(item.constructor.name)} model={item.ref}/>}
+                        {<Context style={Theme.search.item.context} followers={this.props.followers} derivators={this.props.derivators} parents={this.props.parents} date={this.props.date} model={item}/>}
+                    </ListItem>
                 );
                 rows.push(this.expand(item));
             });
@@ -208,7 +206,7 @@ class Search extends Pure {
             if (this.props.inbox) {
                 return (
                     <div>
-                        <Paper style={{marginBottom: "1em"}}>
+                        <Paper style={Theme.search.toolbar}>
                             {this.toolbar()}
                         </Paper>
 
@@ -218,21 +216,21 @@ class Search extends Pure {
 
                         <h4>Today</h4>
                         <Paper>
-                            <List style={{paddingTop: "0px", paddingBottom: "0px"}}>
+                            <List style={Theme.search.list}>
                                 {rows.slice(0, 5)}
                             </List>
                         </Paper>
 
                         <h4>This week</h4>
                         <Paper>
-                            <List style={{paddingTop: "0px", paddingBottom: "0px"}}>
+                            <List style={Theme.search.list}>
                                 {rows.slice(5, 10)}
                             </List>
                         </Paper>
 
                         <h4>This month</h4>
                         <Paper>
-                            <List style={{paddingTop: "0px", paddingBottom: "0px"}}>
+                            <List style={Theme.search.list}>
                                 {rows.slice(10, -1)}
                             </List>
                         </Paper>
@@ -242,12 +240,12 @@ class Search extends Pure {
             } else {
                 return (
                     <div>
-                        <Paper style={{marginBottom: "1em"}}>
+                        <Paper style={Theme.search.toolbar}>
                             {this.chart()}
                         </Paper>
 
-                        <Paper style={{marginTop: "1em"}}>
-                            <List style={{paddingTop: "0px", paddingBottom: "0px"}}>
+                        <Paper>
+                            <List style={Theme.search.list}>
                                 {this.toolbar()}
                                 {rows}
                             </List>

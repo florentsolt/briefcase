@@ -36,7 +36,11 @@ class Loader extends Pure {
             // Spinner ?
             return false;
         } else {
-            return <Component style={this.props.style} model={this.state.model} />;
+            return (
+                <div style={this.props.style}>
+                    <Component model={this.state.model} />
+                </div>
+            );
         }
     }
 }

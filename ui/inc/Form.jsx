@@ -10,9 +10,11 @@ const Button = require("material-ui/lib/flat-button");
 const FontIcon = require("material-ui/lib/font-icon");
 
 const Pure = require("../../ui/inc/Pure");
+const Theme = require("../../ui/inc/Theme");
 const Storage = require("../../ui/Storage");
 const History = require("./History");
-const Ref = require("../../ui/components/Ref");
+const Ref = require("../components/Ref");
+const IconTooltip = require("../components/IconTooltip");
 
 class Form extends Pure {
 
@@ -33,41 +35,29 @@ class Form extends Pure {
     }
 
     render() {
-        let style = {
-            height: "100%",
-            display: "inline-block",
-            verticalAlign: "bottom",
-            fontSize: "inherit",
-            lineHeight: "inherit",
-            color: "inherit",
-            opacity: 0.4,
-            marginRight: "0.4em"
-        };
-
         return (
-            <Paper style={{marginTop: "1em"}}>
-                <ListItem disabled style={{padding: "0px"}}>
+            <Paper style={Theme.form.container}>
+                <ListItem disabled style={Theme.form.ListItem}>
                     <Toolbar>
                         <ToolbarGroup>
                             <ToolbarTitle text={this.props.title}/>
                         </ToolbarGroup>
                     </Toolbar>
                 </ListItem>
-                <ListItem disabled style={{padding: "0px"}}>
-                    <div style={{fontSize: "20px", lineHeight: "56px", paddingLeft: "24px"}}>
-                        <FontIcon className="material-icons" style={style}>inbox</FontIcon>
-                        <FontIcon className="material-icons" style={style}>chevron_right</FontIcon>
+                <ListItem disabled style={Theme.form.ListItem}>
+                    <div style={Theme.form.parents}>
+                        <IconTooltip style={Theme.form.parentsIcon} icon="inbox" tooltip="Inbox" />
+                        <FontIcon className="material-icons" style={Theme.form.parentsIcon}>chevron_right</FontIcon>
                         <Ref model={this.props.parent}/>
                     </div>
                 </ListItem>
-                <div style={{padding: "1em"}}>
+                <div style={Theme.form.content}>
                     {this.props.children}
-                    <div style={{textAlign: "right", marginTop: "1em"}}>
+                    <div style={Theme.form.footer}>
                         <Button label="Back" secondary onTouchTap={this.onBack}/>
                         <Button label="Submit" primary onTouchTap={this.onSubmit}/>
                     </div>
                 </div>
-
             </Paper>
         );
     }

@@ -8,6 +8,7 @@ const Pure = require("../../ui/inc/Pure");
 const Form = require("../../ui/inc/Form");
 const Directory = require("../../inc/Directory");
 const Issue = Directory.model("Issue");
+const Theme = require("../../ui/inc/Theme");
 
 class IssueForm extends Pure {
 
@@ -59,10 +60,10 @@ class IssueForm extends Pure {
     render() {
         return (
             <Form parent={this.props.model} title="Add an Issue" onSubmit={this.onSubmit}>
-                <TextField ref="subject" floatingLabelText="Subject" hintText="A subject..." style={{width: "100%"}}/>
+                <TextField ref="subject" floatingLabelText="Subject" hintText="A subject..." style={Theme.form.TextField}/>
                 <SelectField value={this.state.status} floatingLabelText="Status" hintText="Pick one" menuItems={this.statuses} displayMember="payload" onChange={this.setStatus}/>
                 <SelectField value={this.state.priority} floatingLabelText="Priority" menuItems={this.priorities}  displayMember="payload" onChange={this.setPriority}/>
-                <TextField ref="description" floatingLabelText="Description" multiLine hintText="A description..." style={{width: "100%"}}/>
+                <TextField ref="description" floatingLabelText="Description" multiLine hintText="A description..." style={Theme.form.TextField}/>
             </Form>
         );
     }

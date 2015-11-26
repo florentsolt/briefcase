@@ -9,7 +9,7 @@ class Children extends Pure {
 
     render() {
         return (
-            <Search date toolbar query={"childrenOf:" + this.props.model.ref} sort="createdAt:desc"/>
+            <Search date toolbar model={this.props.model} query={"childrenOf:" + this.props.model.ref} sort="createdAt:desc"/>
         );
     }
 

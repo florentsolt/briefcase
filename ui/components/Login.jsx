@@ -8,6 +8,7 @@ const FontIcon = require("material-ui/lib/font-icon");
 const RaisedButton = require("material-ui/lib/raised-button");
 
 const Pure = require("../inc/Pure");
+const Theme = require("../inc/Theme");
 
 class Login extends Pure {
 
@@ -21,27 +22,18 @@ class Login extends Pure {
     }
 
     render() {
-        let style = {
-            height: "100%",
-            display: "inline-block",
-            verticalAlign: "middle",
-            float: "left",
-            paddingRight: "6px",
-            lineHeight: "32px"
-        };
-
         return (
-                <Paper style={{margin:"10em auto", padding:"3em", width: "450px"}}>
-                    <div style={{fontSize: "22px", lineHeight: "36px", marginBottom:"1em"}}>
-                        <FontIcon className="material-icons" style={style}>work</FontIcon>
+                <Paper style={Theme.login.container}>
+                    <div style={Theme.login.header}>
+                        <FontIcon className="material-icons" style={Theme.login.logo}>work</FontIcon>
                         Brieƒcαse
                     </div>
                     <form ref="form" method="post" action="/login">
-                        <TextField hintText="Username" name="username" style={{width: "100%"}} onEnterKeyDown={this.onEnterKeyDown}/>
-                        <TextField hintText="Password" name="password" style={{width: "100%"}} type="password" onEnterKeyDown={this.onEnterKeyDown}/>
+                        <TextField hintText="Username" name="username" style={Theme.form.TextField} onEnterKeyDown={this.onEnterKeyDown}/>
+                        <TextField hintText="Password" name="password" style={Theme.form.TextField} type="password" onEnterKeyDown={this.onEnterKeyDown}/>
                     </form>
 
-                    <div style={{marginTop: "1em", textAlign: "right"}}>
+                    <div style={Theme.login.footer}>
                         <RaisedButton label="Login" primary onTouchTap={this.onEnterKeyDown}/>
                     </div>
                 </Paper>
