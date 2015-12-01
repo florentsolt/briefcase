@@ -62,7 +62,7 @@ router.get("/search/:query", (req, res) => {
     search(res, req);
 });
 
-router.post("/:klass/:id/delete", (req, res) => {
+router.delete("/:klass/:id", (req, res) => {
     Directory.model(req.params.klass)
         .find(req.params.id)
         .then((model) => model.delete())
