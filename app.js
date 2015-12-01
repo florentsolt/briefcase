@@ -43,7 +43,7 @@ app.get("/*", (req, res) => {
     }
 });
 
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
     // FIXME manage JSON response
     Logger.error(err);
     if (req.xhr) {
