@@ -8,6 +8,7 @@ const List = require("material-ui/lib/lists/list");
 const ListItem = require("material-ui/lib/lists/list-item");
 const ListDivider = require("material-ui/lib/lists/list-divider");
 const Toolbar = require("material-ui/lib/toolbar/toolbar");
+const ToolbarGroup = require("material-ui/lib/toolbar/toolbar-group");
 const Snackbar = require("material-ui/lib/snackbar");
 
 const History = require("../inc/History");
@@ -26,7 +27,9 @@ const Spinner = require ("./Spinner");
 const Context = require("./Context");
 const Actions = require("./Actions");
 const Add = require("./Add");
+const Views = require("./Views");
 const Query = require("./Query");
+const IconTooltip = require("./IconTooltip");
 
 class Search extends Pure {
 
@@ -45,10 +48,13 @@ class Search extends Pure {
             offset: -(this.props.size || 25),
             size: this.props.size || 25,
 
+            view: this.props.view || "List",
+
             snack: false
         };
 
         this.onSnackDismiss = this.onSnackDismiss.bind(this);
+        this.onViewChange = this.onViewChange.bind(this);
         this.loadOneMorePage = this.loadOneMorePage.bind(this);
         this.onDrop = this.onDrop.bind(this);
     }
@@ -119,12 +125,24 @@ class Search extends Pure {
         this.requestSearch(this.state.query, this.state.sort, this.refs.filter.getValue().trim(), 0, this.state.size);
     }
 
+    onViewChange(view) {
+        this.setState({
+            view: view
+        });
+    }
+
     toolbar() {
         if (this.props.toolbar) {
             return (
-                <ListItem disabled style={Theme.search.filter} rightIconButton={<Add model={this.props.model}/>}>
-                    <Toolbar>
-                        <Query hintText="Filter"/>
+                <ListItem disabled style={Theme.search.filter}>
+                    <Toolbar style={{paddingRight: "5px"}}>
+                        <ToolbarGroup key={0} float="left">
+                            <Query hintText="Filter"/>
+                        </ToolbarGroup>
+                        <ToolbarGroup key={1} float="right">
+                            <Views onViewChange={this.onViewChange}/>
+                            <Add model={this.props.model}/>
+                        </ToolbarGroup>
                     </Toolbar>
                 </ListItem>
             );
@@ -200,6 +218,46 @@ class Search extends Pure {
         return false;
     }
 
+    renderModel(model) {
+        var icon = (<div>
+                <IconTooltip tooltip={model.ref}>
+                    <Loader ui={Directory.icon(model.constructor.name)} model={model.ref}/>
+                </IconTooltip>
+            </div>);
+
+        switch(this.state.view) {
+        case "Headline":
+            return(
+                <ListItem key={model.ref}
+                    disabled={Directory.hasPanel(model.constructor.name)}
+                    onTouchTap={this.onRowClick}
+                    model={model}
+                    parent={this}
+                    rightIconButton={<Actions parent={this} model={model}/>}
+                    leftIcon={icon}
+                    primaryText={model.title}/>
+            );
+
+        case "List":
+            return(
+                <ListItem key={model.ref}
+                    disabled={Directory.hasPanel(model.constructor.name)}
+                    onTouchTap={this.onRowClick}
+                    model={model}
+                    parent={this}
+                    rightIconButton={<Actions parent={this} model={model}/>}
+                    leftIcon={icon}>
+
+                    {<Loader style={Theme.search.model.inline} ui={Directory.inline(model.constructor.name)} model={model.ref}/>}
+                    {<Context style={Theme.search.model.context} followers={this.props.followers} derivators={this.props.derivators} parents={this.props.parents} date={this.props.date} model={model}/>}
+                </ListItem>
+            );
+        case "Column":
+            break;
+        }
+
+    }
+
     render() {
         if (this.state.models ===  false) {
             return (
@@ -211,85 +269,35 @@ class Search extends Pure {
         } else {
             let rows = [];
 
-            this.state.models.forEach((item) => {
-                if (rows.length > 0) rows.push(<ListDivider key={"divider" + item.ref}/>);
-
-                rows.push(
-                    <ListItem key={item.ref}
-                        disabled={Directory.hasPanel(item.constructor.name)}
-                        onTouchTap={this.onRowClick}
-                        model={item}
-                        parent={this}
-                        rightIconButton={<Actions parent={this} model={item}/>}
-                        leftIcon={<Loader style={Theme.search.item.leftIcon} ui={Directory.icon(item.constructor.name)} model={item.ref}/>}>
-
-                        {<Loader style={Theme.search.item.inline} ui={Directory.inline(item.constructor.name)} model={item.ref}/>}
-                        {<Context style={Theme.search.item.context} followers={this.props.followers} derivators={this.props.derivators} parents={this.props.parents} date={this.props.date} model={item}/>}
-                    </ListItem>
-                );
-                rows.push(this.expand(item));
+            this.state.models.forEach((model) => {
+                if (rows.length > 0) rows.push(<ListDivider key={"divider" + model.ref}/>);
+                rows.push(this.renderModel(model));
+                rows.push(this.expand(model));
             });
 
             if (rows.length === 0) {
                 rows.push(<ListItem disabled key="nothing"><center><em>None</em></center></ListItem>);
             }
 
-            if (this.props.inbox) {
-                return (
-                    <div>
-                        <Paper style={Theme.search.toolbar}>
+            return (
+                <div>
+                    <Paper style={Theme.search.toolbar}>
+                        {this.chart()}
+                    </Paper>
+
+                    <Paper>
+                        <List style={Theme.search.list}>
                             {this.toolbar()}
-                        </Paper>
-
-                        <Paper>
-                            {this.chart()}
-                        </Paper>
-
-                        <h4>Today</h4>
-                        <Paper>
-                            <List style={Theme.search.list}>
-                                {rows.slice(0, 5)}
-                            </List>
-                        </Paper>
-
-                        <h4>This week</h4>
-                        <Paper>
-                            <List style={Theme.search.list}>
-                                {rows.slice(5, 10)}
-                            </List>
-                        </Paper>
-
-                        <h4>This month</h4>
-                        <Paper>
-                            <List style={Theme.search.list}>
-                                {rows.slice(10, -1)}
-                            </List>
-                        </Paper>
+                            <Dropzone disableClick onDrop={this.onDrop} style={Theme.drop.normal} activeStyle={Theme.drop.active} rejectStyle={Theme.drop.reject}>
+                                {rows}
+                            </Dropzone>
+                        </List>
                         {!this.state.loading ? <Waypoint onEnter={this.loadOneMorePage}/> : false}
-                        {this.snack()}
-                    </div>
-                );
-            } else {
-                return (
-                    <div>
-                        <Paper style={Theme.search.toolbar}>
-                            {this.chart()}
-                        </Paper>
+                    </Paper>
 
-                        <Paper>
-                            <List style={Theme.search.list}>
-                                {this.toolbar()}
-                                <Dropzone disableClick onDrop={this.onDrop} style={Theme.drop.normal} activeStyle={Theme.drop.active} rejectStyle={Theme.drop.reject}>
-                                    {rows}
-                                </Dropzone>
-                            </List>
-                            {!this.state.loading ? <Waypoint onEnter={this.loadOneMorePage}/> : false}
-                        </Paper>
-
-                        {this.snack()}
-                    </div>
-                );
-            }
+                    {this.snack()}
+                </div>
+            );
         }
     }
 }

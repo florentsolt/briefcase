@@ -181,10 +181,7 @@ exports.search = {
     expand: {
         marginLeft: "3em"
     },
-    item: {
-        leftIcon: {
-            marginTop: "4px"
-        },
+    model: {
         inline: {
             fontSize: "16px",
             paddingBottom: "6px"
@@ -210,7 +207,8 @@ exports.tooltip = {
         display: "inline-block"
     },
     content: {
-        boxSizing: "border-box"
+        boxSizing: "border-box",
+        top: "24px" // I do not know how to fix this ???
     }
 };
 

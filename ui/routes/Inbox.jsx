@@ -37,7 +37,7 @@ class InboxRoute extends Pure {
     render() {
         return (
             <div>
-                <Search toolbar chart inbox derivators parents query={this.query()} sort="createdAt:desc" model={window.Me}/>
+                <Search toolbar chart derivators parents query={this.query()} sort="createdAt:desc" model={window.Me}/>
             </div>
         );
     }
