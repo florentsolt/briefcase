@@ -2,6 +2,7 @@
 
 const events = require("events");
 const Model = require("../inc/Model");
+const superagent = require("superagent");
 
 let cache = new Map();
 
@@ -21,10 +22,10 @@ class Storage extends events.EventEmitter {
             return Promise.resolve(cache.get(ref));
         } else {
             return new Promise((resolve, reject) => {
-                $.get(`/api/${refToPath(ref)}`, (response) => {
-                    resolve(Model.decode(response));
-                }).fail(reject);
-
+                superagent.get(`/api/${refToPath(ref)}`).end((err, res) => {
+                    if (err) reject(err);
+                    resolve(Model.decode(res.body));
+                });
             }).then((model) => {
                 cache.set(model.ref, model);
                 return model;
@@ -51,11 +52,9 @@ class Storage extends events.EventEmitter {
 
     delete(ref) {
         return new Promise((resolve, reject) => {
-            $.ajax({
-                type: "POST",
-                url: `/api/${refToPath(ref)}/delete`,
-                error: reject,
-                success: resolve
+            superagent.del(`/api/${refToPath(ref)}`).end((err, res) => {
+                if (err) reject(err);
+                resolve(res.body);
             });
         });
     }
@@ -67,9 +66,10 @@ class Storage extends events.EventEmitter {
         size = parseInt(size || 50, 10);
 
         return new Promise((resolve, reject) => {
-            $.get(`/api/search/${query}/${sort}/${offset}/${size}`, (response) => {
-                resolve(response);
-            }).fail(reject);
+            superagent.get(`/api/search/${query}/${sort}/${offset}/${size}`).end((err, res) => {
+                if (err) reject(err);
+                resolve(res.body);
+            });
 
         }).then((response) => {
             if (response.prefetch) {
@@ -80,6 +80,24 @@ class Storage extends events.EventEmitter {
                 delete(response.prefetch);
             }
             return response;
+        });
+    }
+
+    upload(parent, files) {
+        return new Promise((resolve, reject) => {
+            var request = superagent.post("/api/File/upload");
+            request.query({ parent: parent.ref });
+            files.forEach((file)=> {
+                request.attach(file.name, file, file.name);
+            });
+            request.end((err, res) => {
+                if (err) reject(err);
+                resolve(res.body.map((data) => {
+                    let model = Model.decode(data);
+                    cache.set(model.ref, model);
+                    return model;
+                }));
+            });
         });
     }
 }

@@ -61,8 +61,10 @@ exports.panel = {
 exports.model = {
     image: {
         inline: {
+            display: "block",
             maxWidth: "150px",
-            maxHeight: "150px"
+            maxHeight: "150px",
+            marginTop: "0.5em"
         },
 
         panel: {
@@ -209,5 +211,22 @@ exports.tooltip = {
     },
     content: {
         boxSizing: "border-box"
+    }
+};
+
+exports.drop = {
+    catchall: {
+
+    },
+    normal: {
+        boxShadow: "none",
+        transition: "box-shadow 0.3s ease-in-out 0s"
+
+    },
+    active: {
+        boxShadow: "inset 0 0 0 6px " + exports.nav.bar.backgroundColor
+    },
+    reject: {
+        boxShadow: "none"
     }
 };

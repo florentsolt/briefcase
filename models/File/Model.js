@@ -12,7 +12,8 @@ module.exports = class File extends Model {
     static get mapping() {
         return {
             name: {"type":"string"},
-            size: {"type":"long"}
+            size: {"type":"long"},
+            type: {"type":"string"}
         };
     }
 

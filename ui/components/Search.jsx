@@ -7,12 +7,8 @@ const Paper = require("material-ui/lib/paper");
 const List = require("material-ui/lib/lists/list");
 const ListItem = require("material-ui/lib/lists/list-item");
 const ListDivider = require("material-ui/lib/lists/list-divider");
-const Item = require("material-ui/lib/menus/menu-item");
-const IconMenu = require("material-ui/lib/menus/icon-menu");
 const Toolbar = require("material-ui/lib/toolbar/toolbar");
-const ToolbarGroup = require("material-ui/lib/toolbar/toolbar-group");
-const IconButton = require("material-ui/lib/icon-button");
-const TextField = require("material-ui/lib/text-field");
+const Snackbar = require("material-ui/lib/snackbar");
 
 const History = require("../inc/History");
 const Pure = require("../inc/Pure");
@@ -21,6 +17,7 @@ const Theme = require("../inc/Theme");
 const Loader = require("../inc/Loader");
 const Chart = require("./Chart");
 const Waypoint = require("react-waypoint");
+const Dropzone = require("react-dropzone");
 
 const Storage = require("../Storage");
 const Directory = require("../../inc/Directory");
@@ -46,10 +43,14 @@ class Search extends Pure {
             query: this.props.query,
             sort: this.props.sort || "createdAt:desc",
             offset: -(this.props.size || 25),
-            size: this.props.size || 25
+            size: this.props.size || 25,
+
+            snack: false
         };
 
+        this.onSnackDismiss = this.onSnackDismiss.bind(this);
         this.loadOneMorePage = this.loadOneMorePage.bind(this);
+        this.onDrop = this.onDrop.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -140,6 +141,16 @@ class Search extends Pure {
         }
     }
 
+    // Used in <Actions/>
+    deleteModel(model) {
+        Storage.delete(model.ref)
+            .then(() => this.setState({
+                action: false,
+                models: this.state.models.filter((stateModel) => model.ref !== stateModel.ref),
+                snack: model.ref + " has been deleted"
+            }));
+    }
+
     onRowClick() {
         // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-no-bind.md#lists-of-items
         // parent & model are passsed as props
@@ -152,6 +163,15 @@ class Search extends Pure {
         } else {
             History.pushState(undefined, `/${this.model.constructor.name}/${this.model.id}`, undefined);
         }
+    }
+
+    onDrop(files) {
+        Storage.upload(this.props.model, files).then((models) => {
+            this.setState({
+                models: Array.concat(models, this.state.models),
+                snack: models.map((m) => m.ref).join(", ") + " has been uploaded"
+            });
+        });
     }
 
     expand(model) {
@@ -167,6 +187,17 @@ class Search extends Pure {
             return false;
         }
 
+    }
+
+    onSnackDismiss() {
+        this.setState({snack: false});
+    }
+
+    snack() {
+        if (this.state.snack) {
+            return <Snackbar openOnMount action="dismiss" message={this.state.snack} autoHideDuration={5000} onActionTouchTap={this.onSnackDismiss} onDismiss={this.onSnackDismiss}/>;
+        }
+        return false;
     }
 
     render() {
@@ -189,7 +220,7 @@ class Search extends Pure {
                         onTouchTap={this.onRowClick}
                         model={item}
                         parent={this}
-                        rightIconButton={<Actions model={item}/>}
+                        rightIconButton={<Actions parent={this} model={item}/>}
                         leftIcon={<Loader style={Theme.search.item.leftIcon} ui={Directory.icon(item.constructor.name)} model={item.ref}/>}>
 
                         {<Loader style={Theme.search.item.inline} ui={Directory.inline(item.constructor.name)} model={item.ref}/>}
@@ -235,6 +266,7 @@ class Search extends Pure {
                             </List>
                         </Paper>
                         {!this.state.loading ? <Waypoint onEnter={this.loadOneMorePage}/> : false}
+                        {this.snack()}
                     </div>
                 );
             } else {
@@ -247,10 +279,14 @@ class Search extends Pure {
                         <Paper>
                             <List style={Theme.search.list}>
                                 {this.toolbar()}
-                                {rows}
+                                <Dropzone disableClick onDrop={this.onDrop} style={Theme.drop.normal} activeStyle={Theme.drop.active} rejectStyle={Theme.drop.reject}>
+                                    {rows}
+                                </Dropzone>
                             </List>
                             {!this.state.loading ? <Waypoint onEnter={this.loadOneMorePage}/> : false}
                         </Paper>
+
+                        {this.snack()}
                     </div>
                 );
             }

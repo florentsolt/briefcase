@@ -6,6 +6,8 @@ const ListItem = require("material-ui/lib/lists/list-item");
 const ListDivider = require("material-ui/lib/lists/list-divider");
 const FontIcon = require("material-ui/lib/font-icon");
 
+const Dropzone = require("react-dropzone");
+
 const History = require("../inc/History");
 const Pure = require("../inc/Pure");
 const Theme = require("../inc/Theme");
@@ -57,7 +59,7 @@ class App extends Pure {
             );
         } else {
             return (
-                <div>
+                <Dropzone style={Theme.drop.catchall} disableClick>
                     <Nav query={this.props.params.query}/>
                     <div className="row">
                         <div className="col-xs-12 last-xs col-sm-3 col-md-2 col-lg-2">
@@ -78,7 +80,7 @@ class App extends Pure {
                             {this.props.children}
                         </div>
                     </div>
-                </div>
+                </Dropzone>
             );
         }
     }
