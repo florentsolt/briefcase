@@ -237,7 +237,7 @@ if (process.env.__BROWSER) {
                 let ref = modelOrRef;
                 return this.constructor._resolveRef(ref).then((model) => {
                     if (model) {
-                        return this._push(key1, key2, model);
+                        return this._push(key1, model);
                     } else {
                         Logger.warn(`Model ${model} not found, skip the relation`);
                     }
