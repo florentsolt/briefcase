@@ -13,7 +13,8 @@ module.exports = class File extends Model {
         return {
             name: {"type":"string"},
             size: {"type":"long"},
-            type: {"type":"string"}
+            type: {"type":"string"},
+            path: {"type":"string", "index": "no"}
         };
     }
 

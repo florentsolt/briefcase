@@ -85,11 +85,12 @@ router.get("/:klass/:id", (req, res) => {
         });
 });
 
-var processFile = function(parent, name, size, type) {
+var processFile = function(parent, name, file) {
     return File.create({
         name: name,
-        size: size,
-        type: type
+        size: file.size,
+        type: file.type,
+        path: path.basename(file.path)
     }).then((model) => model.addParent(parent))
     .then((model) => model.encode(true));
 };
@@ -102,7 +103,7 @@ router.post("/File/upload", (req, res) => {
 
     form.parse(req, function(err, fields, files) {
         Logger.debug("upload", req.query.parent, JSON.stringify(files));
-        return Promise.map(Object.keys(files), (name) => processFile(req.query.parent, name, files[name].size, files[name].type))
+        return Promise.map(Object.keys(files), (name) => processFile(req.query.parent, name, files[name]))
             .then((models) => toJson(res, models))
             .then(() => Es.indexRelations())
             .catch((e) => Logger.error(e));
