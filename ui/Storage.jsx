@@ -75,6 +75,7 @@ class Storage extends events.EventEmitter {
         return new Promise((resolve, reject) => {
             superagent.del(`/api/${refToPath(ref)}`).end((err, res) => {
                 if (err) reject(err);
+                cache.delete(ref);
                 resolve(res.body);
             });
         });
