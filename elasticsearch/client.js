@@ -43,6 +43,7 @@ module.exports = {
     },
 
     refresh: function() {
+        Logger.debug("Refresh index");
         return client.indices.refresh({index: index});
     },
 
@@ -92,6 +93,7 @@ module.exports = {
                 index: index
             }).then(() => {
                 bulk = [];
+                return this.refresh();
             });
         } else {
             return Promise.resolve();
@@ -118,7 +120,7 @@ module.exports = {
             type: model.constructor.name,
             id: model.id,
             body: extend(data, model.data)
-        });
+        }).then(() => this.refresh());
     },
 
     delete: function(model) {
@@ -126,7 +128,7 @@ module.exports = {
             index: index,
             type: model.constructor.name,
             id: model.id
-        });
+        }).then(() => this.refresh());
     },
 
     update: function(model) {
@@ -141,7 +143,7 @@ module.exports = {
             type: model.constructor.name,
             id: model.id,
             body: {doc: extend(doc, model.data)}
-        });
+        }).then(() => this.refresh());
     },
 
     search: function(query, sort, offset, size) {
@@ -239,7 +241,10 @@ module.exports = {
         var mappings = {
             index: index,
             body: {
-                "mappings": {}
+                "mappings": {},
+                "settings": {
+                    "refresh_interval": -1
+                }
             }
         };
 
