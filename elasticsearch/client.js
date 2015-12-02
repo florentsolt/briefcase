@@ -37,9 +37,7 @@ module.exports = {
     flush: function() {
         return client.indices.delete({index: index}).catch(() => {
             // Ignore when the index does not exist
-        }).then(() => {
-            return this.createIndex();
-        });
+        }).then(() => this.createIndex());
     },
 
     refresh: function() {
