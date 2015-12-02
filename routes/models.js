@@ -66,9 +66,8 @@ router.delete("/:klass/:id", (req, res) => {
     Directory.model(req.params.klass)
         .find(req.params.id)
         .then((model) => model.delete())
-        .then(() => {
-            res.status(200).end();
-        });
+        .then(() => Es.indexRelations())
+        .then(() => res.status(200).end());
 });
 
 router.get("/:klass/:id", (req, res) => {
