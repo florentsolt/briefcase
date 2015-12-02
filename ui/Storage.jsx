@@ -47,6 +47,28 @@ class Storage extends events.EventEmitter {
                     resolve(newModel);
                 }
             });
+
+    addParent(ref, refToParent) {
+        return new Promise((resolve, reject) => {
+            superagent.post(`/api/${refToPath(ref)}/parent/${refToPath(refToParent)}`)
+                .end((err, res) => {
+                    if (err) reject(err);
+                    let newModel = Model.decode(res.body);
+                    cache.set(newModel.ref, newModel);
+                    resolve(newModel);
+                });
+        });
+    }
+
+    addDerivator(ref, refToDerivator) {
+        return new Promise((resolve, reject) => {
+            superagent.post(`/api/${refToPath(ref)}/derivator/${refToPath(refToDerivator)}`)
+                .end((err, res) => {
+                    if (err) reject(err);
+                    let newModel = Model.decode(res.body);
+                    cache.set(newModel.ref, newModel);
+                    resolve(newModel);
+                });
         });
     }
 

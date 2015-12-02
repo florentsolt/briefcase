@@ -115,4 +115,26 @@ router.post("/:klass", (req, res) => {
     });
 });
 
+// FIXME Use a generic route to manage all relations
+
+router.post("/:klass/:id/parent/:parentKlass/:parentId", (req, res) => {
+    Directory.model(req.params.klass)
+        .find(req.params.id)
+        .then((model) => model.addParent(req.params.parentKlass + "#" + req.params.parentId))
+        .then((model) => Es.indexRelations().then(() => model))
+        .then((model) => model.includeRelations())
+        .then((model) => toJson(res, model.encode(true)))
+        .catch((e) => Logger.error(e));
+});
+
+router.post("/:klass/:id/derivator/:derivatorKlass/:derivatorId", (req, res) => {
+    Directory.model(req.params.klass)
+        .find(req.params.id)
+        .then((model) => model.addDerivator(req.params.derivatorKlass + "#" + req.params.derivatorId))
+        .then((model) => Es.indexRelations().then(() => model))
+        .then((model) => model.includeRelations())
+        .then((model) => toJson(res, model.encode(true)))
+        .catch((e) => Logger.error(e));
+});
+
 module.exports = router;

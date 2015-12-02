@@ -26,7 +26,10 @@ class Form extends Pure {
 
     onSubmit() {
         if (this.props.onSubmit) {
-            Storage.add(this.props.onSubmit());
+            Storage.add(this.props.onSubmit())
+                .then((model) => Storage.addParent(model.ref, this.props.parent.ref))
+                .then((model) => Storage.addDerivator(model.ref, window.Me.ref))
+                .then(() => History.goBack());
         }
     }
 
