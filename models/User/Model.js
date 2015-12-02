@@ -22,6 +22,6 @@ module.exports = class User extends Model {
     }
 
     static get allowedChildren() {
-        return [ "Issue", "Question", "Idea" ];
+        return [ "Issue", "Question", "Idea", "Wiki" ];
     }
 };
