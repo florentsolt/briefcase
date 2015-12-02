@@ -75,7 +75,6 @@ router.get("/:klass/:id", (req, res) => {
         .find(req.params.id)
         .then((model) => model.includeRelations())
         .then((model) => {
-            res.type("json");
             if (model === null) {
                 res.status(404).send("Data not found.").end();
             } else {
