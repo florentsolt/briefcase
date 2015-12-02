@@ -35,18 +35,17 @@ class Storage extends events.EventEmitter {
 
     add(model) {
         return new Promise((resolve, reject) => {
-            $.ajax({
-                type: "POST",
-                url: `/api/${model.constructor.name}`,
-                data: model.encode(),
-                contentType: "application/json",
-                error: reject,
-                success: (response) => {
-                    let newModel = Model.decode(response);
+            superagent.post(`/api/${model.constructor.name}`)
+                .set("Content-Type", "application/json")
+                .send(model.encode())
+                .end((err, res) => {
+                    if (err) reject(err);
+                    let newModel = Model.decode(res.body);
                     cache.set(newModel.ref, newModel);
                     resolve(newModel);
-                }
-            });
+                });
+        });
+    }
 
     addParent(ref, refToParent) {
         return new Promise((resolve, reject) => {
